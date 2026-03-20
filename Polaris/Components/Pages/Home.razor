@@ -1,0 +1,84 @@
+﻿@page "/"
+@using Polaris.Servicio
+@inject NavigationManager Nav
+@inject UsuarioService usuarioService
+
+
+
+<Toasts class="p-3" Messages="messages" AutoHide="true" Delay="6000" Placement="ToastsPlacement.TopRight" />
+
+
+@code{
+    private ToastMessage CreateToastMessage(string title, string msj)
+  => new ToastMessage
+  {
+      Type = ToastType.Info,
+      Title = title,
+      HelpText = $"{DateTime.Now}",
+      Message = msj,
+  };
+    List<ToastMessage> messages = new List<ToastMessage>();
+    protected override async Task OnInitializedAsync()
+    {
+        var user = usuarioService.Usuario;
+        if (user == null )
+        {
+            //Nav.NavigateTo("/Authenticacion");
+        }
+        else
+        {
+            // como sabras nosostros usamos .razor
+            messages.Add(CreateToastMessage($"Hola Bienvenido {user.Name}", @"Vaya ya te extrañabamos ;)"));
+        }
+    }
+    
+}
+
+<div class="container mt-4">
+    <div class="p-5 mb-4 bg-dark text-white rounded-3 shadow-lg">
+        <div class="container-fluid py-5 text-center">
+            <h1 class="display-5 fw-bold text-primary">PROGRAMA POLARIS</h1>
+            <p class="fs-4">Plataforma del programa universitario de formación en tecnologías espaciales.</p>
+            <p class="text-secondary">Instituto Tecnológico de Matamoros</p>
+            <hr class="my-4 border-secondary" />
+            
+            <Button Color="ButtonColor.Primary" Size="ButtonSize.Large" To="/Authenticacion" Type="ButtonType.Link">
+                <Icon Name="IconName.Rocket" /> Únete a POLARIS
+            </Button>
+        </div>
+    </div>
+
+    <section class="mt-5 pb-5">
+        <div class="d-flex align-items-center mb-4">
+            <Icon Name="IconName.Grid3X3GapFill" Size="IconSize.x3" Class="me-2 text-primary" />
+            <h2 class="mb-0">Proyectos y Equipos</h2>
+        </div>
+        
+        <div class="row g-4">
+            <div class="col-md-4">
+                <Card Class="shadow-sm border-0 bg-light">
+                    <CardBody>
+                        <CardTitle tag="h5">PolariX</CardTitle>
+                        <CardText>Desarrollo de cohetería y propulsión.</CardText>
+                    </CardBody>
+                </Card>
+            </div>
+            <div class="col-md-4">
+                <Card Class="shadow-sm border-0 bg-light">
+                    <CardBody>
+                        <CardTitle tag="h5">Mentes en Órbita</CardTitle>
+                        <CardText>Investigación y divulgación científica.</CardText>
+                    </CardBody>
+                </Card>
+            </div>
+            <div class="col-md-4">
+                <Card Class="shadow-sm border-0 bg-light">
+                    <CardBody>
+                        <CardTitle tag="h5">Hydronautas</CardTitle>
+                        <CardText>Simulación y robótica submarina.</CardText>
+                    </CardBody>
+                </Card>
+            </div>
+        </div>
+    </section>
+</div>

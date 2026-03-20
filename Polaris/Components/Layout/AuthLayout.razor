@@ -1,0 +1,21 @@
+﻿
+@inherits LayoutComponentBase
+
+
+<div class="auth-container">
+    <iframe src="https://www.youtube.com/embed/nGnX6GkrOgk?si=o7SFQBp7-xPyaKF7&autoplay=1&mute=1&controls=0&rel=0&loop=1"
+            title="YouTube video player" frameborder="0"
+            allow=" autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            referrerpolicy="strict-origin-when-cross-origin" class="video-overlay" allowfullscreen>
+    </iframe>
+    <div class="auth-box">
+        <div class="auth-header">
+            <img src="logo.png" alt="Logo" />
+            <h2>Bienvenido a Polaris</h2>
+        </div>
+
+        <div class="auth-content">
+            @Body
+        </div>
+    </div>
+</div>

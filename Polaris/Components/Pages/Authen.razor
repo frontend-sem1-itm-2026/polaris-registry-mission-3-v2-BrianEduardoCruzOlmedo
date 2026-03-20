@@ -1,0 +1,93 @@
+﻿@page "/Authenticacion"
+@using Polaris.Modelo
+@using System.Text.Json
+@using Polaris.Servicio
+@layout AuthLayout
+@inject UsuarioService usuarioService
+@inject NavigationManager nav
+<Tabs @ref="tabs" EnableFadeEffect="true" NavStyle="NavStyle.Underline">
+    <Tab Title="Registro" Active="true">
+        <Content>
+            @((MarkupString)mensaje)
+            <Registro eventRegister="(it) =>onRegister(it)" />
+        </Content>
+    </Tab>
+    <Tab Title="Ingresar">
+        <Content>
+            <Ingreso eventLogin="(it) => onLogin(it)" eventValidarCorreo="(it) => onValidarCorreo(it)" />
+        
+        </Content>
+    </Tab>
+                
+</Tabs>
+<Toasts class="p-3" Messages="messages" AutoHide="true" Delay="6000" Placement="ToastsPlacement.TopRight" />
+
+@code {
+    List<ToastMessage> messages = new List<ToastMessage>();
+    Tabs tabs = default!;
+    public string mensaje { get; set; } = "";
+    public T Transformar<T>(object original) where T:new()
+    {
+        var json = JsonSerializer.Serialize(original);
+        var options = new JsonSerializerOptions
+        {
+            PropertyNameCaseInsensitive = true,
+        };
+        return JsonSerializer.Deserialize<T>(json, options)?? new ();
+    }
+    private async Task onValidarCorreo(string? correo)
+    {
+        if (!string.IsNullOrEmpty(correo))
+            return;
+
+        if (await usuarioService.ExisteCorreo(correo!))
+        {
+            messages.Add(CreateToastMessage("Este correo ya está registrado", "Intenta iniciar sesión."));
+        }
+    }
+    private async Task onRegister(UsuarioRegister usuarioR)
+    {
+
+        try
+        {
+            var Usuario = Transformar<Usuario>(usuarioR);
+          
+
+            var Data = await usuarioService.RegistrarUsuario(Usuario);
+           
+            if (Data.state)
+            {
+                await tabs.ShowTabByIndexAsync(1);
+            }
+            messages.Add(CreateToastMessage(Data.title, Data.msj));
+        }catch(Exception ex)
+        {
+
+            messages.Add(CreateToastMessage("Algo salio mall", ex.Message));
+        }
+
+
+    }
+    private ToastMessage CreateToastMessage(string title, string msj)
+    => new ToastMessage
+    {
+        Type = ToastType.Info,
+        Title = title,
+        HelpText = $"{DateTime.Now}",
+        Message = msj,
+    };
+    private async Task onLogin(UsuarioLogin usuarioL)
+    {
+
+        var Usuario = Transformar<Usuario>(usuarioL);
+        var Data = await usuarioService.IngresarUsuario(Usuario);
+        
+        if (Data.state)
+        {
+
+            nav.NavigateTo("/");
+        }
+
+    }
+
+}

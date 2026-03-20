@@ -1,0 +1,68 @@
+﻿@using Polaris.Data
+@using Polaris.Modelo
+@using System.ComponentModel.DataAnnotations
+@using System.Reflection
+@using System.ComponentModel
+
+@code {
+    public UsuarioLogin usuario { get; set; } = new();
+    private EditContext? editContext;
+    [Parameter]
+    public EventCallback<UsuarioLogin> eventLogin { get; set; }
+    [Parameter]
+    public EventCallback<string> eventValidarCorreo { get; set; }
+    private string GetDisplayName(string propertyName)
+    {
+        var property = typeof(UsuarioLogin).GetProperty(propertyName);
+        var attribute = property?.GetCustomAttributes(typeof(DisplayNameAttribute), true)
+                .Cast<DisplayNameAttribute>()
+                .FirstOrDefault();
+        return attribute?.DisplayName ?? propertyName;
+    }
+    protected override void OnInitialized()
+    {
+        editContext = new EditContext(usuario);
+        base.OnInitialized();
+    }
+    public async Task HandleOnValidSubmit()
+    {
+        if (editContext!.Validate())
+        {
+            await eventLogin.InvokeAsync(usuario);
+        }
+    }
+    public async Task ValidarCorreoExistente(string email)
+    {
+        
+        await eventValidarCorreo.InvokeAsync(email);
+        
+    }
+    private async Task ResetForm()
+    {
+        usuario = new();
+        editContext = new EditContext(usuario);
+    }
+    
+}
+<EditForm EditContext="@editContext">
+    <DataAnnotationsValidator />
+    <div class="form-group row mb-3">
+        <label class="col-12 col-md-4  col-form-label">@GetDisplayName(nameof(usuario.Email)): <span class="text-danger">*</span></label>
+        <div class="col">
+            <TextInput @bind-Value="@usuario.Email" Placeholder="@("Ingrese su " + GetDisplayName(nameof(usuario.Email)))" class="form-control" />
+            <ValidationMessage For="@(() => usuario.Email)" />
+        </div>
+    </div>
+    <div class="form-group row mb-3">
+        <label class="col-12 col-md-4 col-form-label">@GetDisplayName(nameof(usuario.Password)): <span class="text-danger">*</span></label>
+        <div class="col">
+            <PasswordInput @bind-Value="@usuario.Password" Placeholder="@("Ingrese su " + GetDisplayName(nameof(usuario.Password)))" class="form-control" />
+            <ValidationMessage For="@(() => usuario.Password)" />
+        </div>
+    </div>
+    
+    <div class="mb-3">
+        <Button Color="ButtonColor.Success" @onclick="HandleOnValidSubmit"> Ingresar </Button>
+        <Button Color="ButtonColor.Secondary" @onclick="ResetForm"> Limpiar </Button>
+    </div>
+</EditForm>
