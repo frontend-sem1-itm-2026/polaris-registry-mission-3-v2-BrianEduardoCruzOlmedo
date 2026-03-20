@@ -13,7 +13,7 @@ namespace Polaris.Data
         DiseñoCAD,
         [Display(Name = "Investigación")]
         Investigacion,
-        [Display(Name = "Fivulgación")]
+        [Display(Name = "Divulgación")]
         Divulgacion,
     }
 }
