@@ -5,7 +5,7 @@
 @layout AuthLayout
 @inject UsuarioService usuarioService
 @inject NavigationManager nav
-<Tabs @ref="tabs" EnableFadeEffect="true" NavStyle="NavStyle.Underline">
+<Tabs @ref="tabs" Position="TabPosition.Start" EnableFadeEffect="true" NavStyle="NavStyle.Tabs">
     <Tab Title="Registro" Active="true">
         <Content>
             @((MarkupString)mensaje)
@@ -14,7 +14,8 @@
     </Tab>
     <Tab Title="Ingresar">
         <Content>
-            <Ingreso eventLogin="(it) => onLogin(it)" eventValidarCorreo="(it) => onValidarCorreo(it)" />
+            <Ingreso eventLogin="(it) => onLogin(it)" eventValidarCorreo="(it) => onValidarCorreo(it)"
+                     eventRegistar="async ()=>{await tabs.ShowTabByIndexAsync(0);}" />
         
         </Content>
     </Tab>

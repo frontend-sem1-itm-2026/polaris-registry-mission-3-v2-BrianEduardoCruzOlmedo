@@ -1,11 +1,15 @@
-﻿
+﻿@using Polaris.Components.Pages
+@using Polaris.Servicio
+@inject FondoVideoService fondoVideoService
 @inherits LayoutComponentBase
-
+@implements IDisposable
 
 <div class="auth-container">
-    <iframe src="https://www.youtube.com/embed/nGnX6GkrOgk?si=o7SFQBp7-xPyaKF7&autoplay=1&mute=1&controls=0&rel=0&loop=1"
-            title="YouTube video player" frameborder="0"
-            allow=" autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+    <iframe @key="fondoVideoService.linkVideo()"
+            src="@fondoVideoService.linkVideo()"
+            title="YouTube video player"
+            frameborder="0"
+            allow="autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
             referrerpolicy="strict-origin-when-cross-origin" class="video-overlay" allowfullscreen>
     </iframe>
     <div class="auth-box">
@@ -19,3 +23,15 @@
         </div>
     </div>
 </div>
+@code{
+    protected override void OnInitialized()
+    {
+        fondoVideoService.OnChange += StateHasChanged;
+    }
+
+    public void Dispose()
+    {
+
+        fondoVideoService.OnChange -= StateHasChanged;
+    }
+}
