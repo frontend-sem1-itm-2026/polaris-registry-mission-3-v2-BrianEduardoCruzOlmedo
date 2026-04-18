@@ -1,7 +1,12 @@
 ﻿@page "/gestion"
 @using Polaris.Servicio
 @using Polaris.Modelo
+@using BlazorBootstrap   
 @inject UsuarioService usuarioService
+<Toasts class="p-3" Messages="messages" AutoHide="true" Delay="4000" Placement="ToastsPlacement.TopRight" />
+
+@* El componente que hace aparecer la ventana de confirmación *@
+<ConfirmDialog @ref="dialog" />
 
 <div class="container mt-4">
     <a href="/" class="btn btn-outline-secondary mb-4 shadow-sm">
@@ -40,7 +45,7 @@
                             <button class="btn btn-warning btn-sm mx-1" @onclick="() => PrepararEdicion(user)">
                                 <i class="bi bi-pencil"></i> Editar
                             </button>
-                            <button class="btn btn-danger btn-sm mx-1" @onclick="() => BorrarUsuario(user.Id)">
+                            <button class="btn btn-danger btn-sm mx-1" @onclick="() => ConfirmarBorrado(user)">
                                 <i class="bi bi-trash"></i> Eliminar
                             </button>
                         </td>
@@ -72,7 +77,7 @@
                     </div>
                 </div>
                 <div class="mt-2">
-                    <button class="btn btn-success" @onclick="GuardarEdicion">Guardar Cambios</button>
+                    <button class="btn btn-success" @onclick="ConfirmarGuardado">Guardar Cambios</button>
                     <button class="btn btn-secondary" @onclick="() => modoEdicion = false">Cancelar</button>
                 </div>
             </div>
@@ -81,8 +86,21 @@
 </div>
 
 @code {
+    private ConfirmDialog dialog = default!;
     private bool modoEdicion = false;
     private Usuario usuarioActual = new Usuario();
+    List<ToastMessage> messages = new List<ToastMessage>();
+
+    private void MostrarNotificacion(string titulo, string msj, bool exito)
+    {
+        messages.Add(new ToastMessage
+        {
+            Type = exito ? ToastType.Success : ToastType.Danger,
+            Title = titulo,
+            HelpText = $"{DateTime.Now:HH:mm:ss}",
+            Message = msj
+        });
+    }
 
     protected override async Task OnInitializedAsync()
     {
@@ -101,14 +119,49 @@
         };
     }
 
-    private async Task GuardarEdicion()
+    // --- NUEVO: CONFIRMACIÓN PARA GUARDAR ---
+    private async Task ConfirmarGuardado()
     {
-        await usuarioService.ActualizarUsuario(usuarioActual);
-        modoEdicion = false;
+        var opciones = new ConfirmDialogOptions
+        {
+            YesButtonText = "Sí, guardar",
+            NoButtonText = "No, cancelar",
+            YesButtonColor = ButtonColor.Success
+        };
+
+        var confirmado = await dialog.ShowAsync(
+            title: "¿Confirmar cambios?",
+            message1: $"¿Estás seguro que quieres actualizar los datos de {usuarioActual.Name}?",
+            confirmDialogOptions: opciones);
+
+        if (confirmado)
+        {
+            var resultado = await usuarioService.ActualizarUsuario(usuarioActual);
+            MostrarNotificacion(resultado.title, resultado.msj, resultado.state);
+            modoEdicion = false;
+        }
     }
 
-    private async Task BorrarUsuario(string id)
+    // --- NUEVO: CONFIRMACIÓN PARA BORRAR ---
+    private async Task ConfirmarBorrado(Usuario user)
     {
-        await usuarioService.EliminarUsuario(id);
+        var opciones = new ConfirmDialogOptions
+        {
+            YesButtonText = "Sí, eliminar",
+            NoButtonText = "No, regresar",
+            YesButtonColor = ButtonColor.Danger
+        };
+
+        var confirmado = await dialog.ShowAsync(
+            title: "¡Advertencia de eliminación!",
+            message1: $"¿Estás completamente seguro de eliminar a {user.Name}?",
+            message2: "Esta acción no se puede deshacer.",
+            confirmDialogOptions: opciones);
+
+        if (confirmado)
+        {
+            var resultado = await usuarioService.EliminarUsuario(user.Id);
+            MostrarNotificacion(resultado.title, resultado.msj, resultado.state);
+        }
     }
 }

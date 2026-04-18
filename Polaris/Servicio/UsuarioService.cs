@@ -130,7 +130,7 @@ namespace Polaris.Servicio
                 // Actualizamos los datos mínimos que pide la rúbrica
                 usuarioExistente.Name = usuarioModificado.Name;
                 usuarioExistente.Email = usuarioModificado.Email;
-                // Puedes agregar más campos aquí si lo necesitan (como Rol_actual)
+                usuarioExistente.Rol_actual = usuarioModificado.Rol_actual;
 
                 return ("Actualización Exitosa", "Los datos del miembro han sido modificados.", true);
             }
