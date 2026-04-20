@@ -1,0 +1,139 @@
+﻿@page "/gestionador-trabajos"
+@using Polaris.Constants
+@using Polaris.Servicio
+@using Polaris.Modelo
+@inject TrabajoService Servicio
+@inject UsuarioService Usuario
+
+<h3>Gestión de Trabajos</h3>
+
+@if (trabajoDetalle == null)
+{
+    <div class="card p-3 mb-4">
+        <h4>Nuevo Trabajo / Evento</h4>
+        <div class="row">
+            <div class="col-md-3">
+                <input class="form-control" @bind="nuevoTrabajo.Nombre" placeholder="Nombre del trabajo" />
+            </div>
+            <div class="col-md-2">
+                <input class="form-control" type="date" @bind="nuevoTrabajo.FechaInicioRegistro" />
+            </div>
+            <div class="col-md-2">
+                <button class="btn btn-primary" @onclick="CrearTrabajo">Crear</button>
+            </div>
+        </div>
+    </div>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>Estado</th>
+                <th>Registro</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var t in trabajos)
+            {
+                <tr>
+                    <td>@t.Id</td>
+                    <td>@t.Nombre</td>
+                    <td>@(t.Descripcion ?? "")</td>
+                    <td>@string.Join(", ", t.Participantes.Select(p => Usuario.usuarios.FirstOrDefault(u => u.Id == p)?.Name))</td>
+                    <td>@t.FechaInicioRegistro</td>
+                    <td>@t.FechaFinRegistro</td>
+                    <td>@t.FechaInicioTrabajo</td>
+                    <td>@t.FechaFinTrabajo</td>
+                    <td>@(EstadoEvento.Estado(t.FechaInicioRegistro, t.FechaFinRegistro, t.FechaInicioTrabajo, t.FechaFinTrabajo))</td>
+                    <td>
+                       
+                        <button class="btn btn-sm btn-secondary" @onclick="() => VerDetalles(t)">Ver Detalles</button>
+                        
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <div class="card p-4">
+        <button class="btn btn-link" @onclick="() => trabajoDetalle = null">« Volver a la lista</button>
+        <h3>Detalles: @trabajoDetalle.Nombre</h3>
+        participantes sin Incribirse
+
+        <ul>
+            @foreach (var p in Usuario.usuarios.Where(u => !trabajoDetalle.Participantes.Contains(u.Id)).ToList())
+            {
+                <li>
+                    ID: @Usuario.usuarios.FirstOrDefault(u => u.Name == p.Name)?.Id  Nombre: @Usuario.usuarios.FirstOrDefault(u => u.Name == p.Name)?.Name
+                </li>
+            }
+        </ul>
+        @if (EstadoEvento.isRegistroAbierto(trabajoDetalle.FechaInicioRegistro, trabajoDetalle.FechaFinRegistro))
+        {
+            <div class="input-group mb-3 w-50">
+                <input class="form-control" @bind="nuevoParticipante" placeholder="Nombre del participante" />
+                <button class="btn btn-success" @onclick="AgregarParticipante">Registrarse</button>
+            </div>
+        }
+        else
+        {
+            <div class="alert alert-warning">El registro está cerrado para este trabajo.</div>
+        }
+
+        <h5>Participantes:</h5>
+        <ul>
+            @foreach (var p in trabajoDetalle.Participantes)
+            {
+                <li>
+                    @Usuario.usuarios.FirstOrDefault(u => u.Id.Contains(p))?.Name
+                    ID: @Usuario.usuarios.FirstOrDefault(u => u.Id.Contains(p))?.Id  Nombre: @Usuario.usuarios.FirstOrDefault(u => u.Id.Contains(p))?.Name
+
+                    <button class="btn btn-sm btn-danger ms-2" @onclick="() => EliminarParticipante(p)">X</button>
+                </li>
+            }
+        </ul>
+    </div>
+}
+
+@code {
+    private Trabajo nuevoTrabajo = new();
+    private Trabajo? trabajoDetalle;
+    private List<Trabajo> trabajos = new();
+    private string nuevoParticipante = "";
+
+    protected override async Task OnInitializedAsync()
+    {
+        await Usuario.Inicializar();
+        trabajos = Servicio.Trabajos.ToList();
+    }
+    private void CrearTrabajo()
+    {
+        Servicio.AgregarTrabajo(nuevoTrabajo);
+        nuevoTrabajo = new(); // Resetear formulario
+    }
+
+    private void VerDetalles(Trabajo t)
+    {
+        trabajoDetalle = t;
+    }
+
+    private void AgregarParticipante()
+    {
+        if (!string.IsNullOrEmpty(nuevoParticipante) && trabajoDetalle != null)
+        {
+            Servicio.AgregarParticipante(trabajoDetalle.Id, nuevoParticipante);
+            nuevoParticipante = "";
+        }
+    }
+
+    private void EliminarParticipante(string nombre)
+    {
+        if (trabajoDetalle != null)
+        {
+            Servicio.EliminarParticipante(trabajoDetalle.Id, nombre);
+        }
+    }
+}

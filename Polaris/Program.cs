@@ -7,6 +7,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddHttpClient();
 builder.Services.AddScoped<UsuarioService>();
+builder.Services.AddScoped<TrabajoService>();
 builder.Services.AddScoped<FondoVideoService>();
 
 // Add services to the container.
