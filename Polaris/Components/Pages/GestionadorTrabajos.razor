@@ -13,10 +13,39 @@
         <h4>Nuevo Trabajo / Evento</h4>
         <div class="row">
             <div class="col-md-3">
-                <input class="form-control" @bind="nuevoTrabajo.Nombre" placeholder="Nombre del trabajo" />
+                <label>Nombre: </label>
+                <input type="text" class="form-control" @bind="nuevoTrabajo.Nombre" placeholder="Nombre del trabajo" />
+            </div>
+            
+            <div class="col-md-3">
+                Tipo de Trabajo
+                <select @bind="nuevoTrabajo.TipoTrabajo">
+                    <option>Seleccione alguna opcion</option>
+                    @foreach (var estado in EstadoEvento.Estados)
+                    {
+                        <option value="@estado">@estado</option>
+                    }
+                </select>
+            </div>
+            <div class="col-md-3">
+                <label>Descripcion: </label>
+                <input type="text" class="form-control" @bind="nuevoTrabajo.Descripcion" placeholder="Nombre del trabajo" />
             </div>
             <div class="col-md-2">
-                <input class="form-control" type="date" @bind="nuevoTrabajo.FechaInicioRegistro" />
+                <label>Fecha de inicio de registro: </label>
+                <DateInput class="form-control"  @bind-Value="nuevoTrabajo.FechaInicioRegistro" />
+            </div>
+            <div class="col-md-2">
+                <label>Fecha de fin de registro: </label>
+                <DateInput class="form-control" @bind-Value="nuevoTrabajo.FechaFinRegistro" />
+            </div>
+            <div class="col-md-2">
+                <label>Fecha de inicio de @nuevoTrabajo.TipoTrabajo: </label>
+                <DateInput class="form-control" @bind-Value="nuevoTrabajo.FechaInicioTrabajo" />
+            </div>
+            <div class="col-md-2">
+                <label>Fecha de fin de @nuevoTrabajo.TipoTrabajo: </label>
+                <DateInput class="form-control" @bind-Value="nuevoTrabajo.FechaFinTrabajo" />
             </div>
             <div class="col-md-2">
                 <button class="btn btn-primary" @onclick="CrearTrabajo">Crear</button>

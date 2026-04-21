@@ -8,6 +8,15 @@
         public const string EnCurso = "En Curso";
         public const string Finalizado = "Finalizado";
 
+        public static List<string> Estados => new()
+        {
+            RegistroNoIniciado,
+            RegistroAbierto,
+            RegistroCerrado,
+            EnCurso,
+            Finalizado
+        };
+
         public static string Estado(DateTime fechaInicioRegistro, DateTime? fechaFinRegistro, DateTime fechaInicioEvento, DateTime? fechaFinEvento)
         {
             DateTime now = DateTime.Now;
