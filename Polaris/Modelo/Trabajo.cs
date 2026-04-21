@@ -13,6 +13,6 @@
         public DateTime FechaInicioRegistro { get; set; } = DateTime.Now;
         public DateTime? FechaFinTrabajo { get; set; } = DateTime.Now.AddDays(7);
         public DateTime? FechaFinRegistro { get; set; } = DateTime.Now.AddDays(3);
-
+        public Trabajo Clone() => (Trabajo)this.MemberwiseClone();
     }
 }

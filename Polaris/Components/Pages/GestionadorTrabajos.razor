@@ -5,164 +5,217 @@
 @inject TrabajoService Servicio
 @inject UsuarioService Usuario
 
-<h3>Gestión de Trabajos</h3>
+<div class="container-fluid">
+    <h3>Gestión de Trabajos y Eventos</h3>
 
-@if (trabajoDetalle == null)
-{
-    <div class="card p-3 mb-4">
-        <h4>Nuevo Trabajo / Evento</h4>
-        <div class="row">
-            <div class="col-md-3">
-                <label>Nombre: </label>
-                <input type="text" class="form-control" @bind="nuevoTrabajo.Nombre" placeholder="Nombre del trabajo" />
-            </div>
-            
-            <div class="col-md-3">
-                Tipo de Trabajo
-                <select @bind="nuevoTrabajo.TipoTrabajo">
-                    <option>Seleccione alguna opcion</option>
-                    @foreach (var estado in EstadoEvento.Estados)
+    @if (trabajoDetalle == null)
+    {
+        <div class="card p-3 mb-4 shadow-sm">
+            <h4 class="text-primary">@(isEditando ? "Editar Trabajo" : "Nuevo Trabajo / Evento")</h4>
+            <div class="row g-3">
+                <div class="col-md-3">
+                    <label class="form-label">Nombre</label>
+                    <input type="text" class="form-control" @bind="trabajoForm.Nombre" />
+                </div>
+                
+                <div class="col-md-3">
+                    <label class="form-label">Tipo</label>
+                    <select class="form-select" @bind="trabajoForm.TipoTrabajo">
+                        <option value="">Seleccione...</option>
+                        @foreach (var estado in TipoEvento.Tipos)
+                        {
+                            <option value="@estado">@estado</option>
+                        }
+                    </select>
+                </div>
+
+                <div class="col-md-6">
+                    <label class="form-label">Descripción</label>
+                    <input type="text" class="form-control" @bind="trabajoForm.Descripcion" />
+                </div>
+
+                <div class="col-md-3">
+                    <label class="form-label">Inicio Registro</label>
+                    <input type="date" class="form-control" @bind="trabajoForm.FechaInicioRegistro" />
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">Fin Registro</label>
+                    <input type="date" class="form-control" @bind="trabajoForm.FechaFinRegistro" />
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">Inicio @(trabajoForm.TipoTrabajo)</label>
+                    <input type="date" class="form-control" @bind="trabajoForm.FechaInicioTrabajo" />
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">Fin @(trabajoForm.TipoTrabajo)</label>
+                    <input type="date" class="form-control" @bind="trabajoForm.FechaFinTrabajo" />
+                </div>
+
+                <div class="col-12 text-end">
+                    @if (isEditando)
                     {
-                        <option value="@estado">@estado</option>
+                        <button class="btn btn-success" @onclick="GuardarCambios">Guardar Cambios</button>
+                        <button class="btn btn-secondary ms-2" @onclick="CancelarEdicion">Cancelar</button>
                     }
-                </select>
-            </div>
-            <div class="col-md-3">
-                <label>Descripcion: </label>
-                <input type="text" class="form-control" @bind="nuevoTrabajo.Descripcion" placeholder="Nombre del trabajo" />
-            </div>
-            <div class="col-md-2">
-                <label>Fecha de inicio de registro: </label>
-                <DateInput class="form-control"  @bind-Value="nuevoTrabajo.FechaInicioRegistro" />
-            </div>
-            <div class="col-md-2">
-                <label>Fecha de fin de registro: </label>
-                <DateInput class="form-control" @bind-Value="nuevoTrabajo.FechaFinRegistro" />
-            </div>
-            <div class="col-md-2">
-                <label>Fecha de inicio de @nuevoTrabajo.TipoTrabajo: </label>
-                <DateInput class="form-control" @bind-Value="nuevoTrabajo.FechaInicioTrabajo" />
-            </div>
-            <div class="col-md-2">
-                <label>Fecha de fin de @nuevoTrabajo.TipoTrabajo: </label>
-                <DateInput class="form-control" @bind-Value="nuevoTrabajo.FechaFinTrabajo" />
-            </div>
-            <div class="col-md-2">
-                <button class="btn btn-primary" @onclick="CrearTrabajo">Crear</button>
+                    else
+                    {
+                        <button class="btn btn-primary" @onclick="CrearTrabajo">Crear Registro</button>
+                    }
+                </div>
             </div>
         </div>
-    </div>
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Nombre</th>
-                <th>Estado</th>
-                <th>Registro</th>
-                <th>Acciones</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var t in trabajos)
-            {
-                <tr>
-                    <td>@t.Id</td>
-                    <td>@t.Nombre</td>
-                    <td>@(t.Descripcion ?? "")</td>
-                    <td>@string.Join(", ", t.Participantes.Select(p => Usuario.usuarios.FirstOrDefault(u => u.Id == p)?.Name))</td>
-                    <td>@t.FechaInicioRegistro</td>
-                    <td>@t.FechaFinRegistro</td>
-                    <td>@t.FechaInicioTrabajo</td>
-                    <td>@t.FechaFinTrabajo</td>
-                    <td>@(EstadoEvento.Estado(t.FechaInicioRegistro, t.FechaFinRegistro, t.FechaInicioTrabajo, t.FechaFinTrabajo))</td>
-                    <td>
-                       
-                        <button class="btn btn-sm btn-secondary" @onclick="() => VerDetalles(t)">Ver Detalles</button>
-                        
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
-}
-else
-{
-    <div class="card p-4">
-        <button class="btn btn-link" @onclick="() => trabajoDetalle = null">« Volver a la lista</button>
-        <h3>Detalles: @trabajoDetalle.Nombre</h3>
-        participantes sin Incribirse
-
-        <ul>
-            @foreach (var p in Usuario.usuarios.Where(u => !trabajoDetalle.Participantes.Contains(u.Id)).ToList())
-            {
-                <li>
-                    ID: @Usuario.usuarios.FirstOrDefault(u => u.Name == p.Name)?.Id  Nombre: @Usuario.usuarios.FirstOrDefault(u => u.Name == p.Name)?.Name
-                </li>
-            }
-        </ul>
-        @if (EstadoEvento.isRegistroAbierto(trabajoDetalle.FechaInicioRegistro, trabajoDetalle.FechaFinRegistro))
-        {
-            <div class="input-group mb-3 w-50">
-                <input class="form-control" @bind="nuevoParticipante" placeholder="Nombre del participante" />
-                <button class="btn btn-success" @onclick="AgregarParticipante">Registrarse</button>
+        <div class="table-responsive">
+            <table class="table table-hover align-middle">
+                <thead class="table-dark">
+                    <tr>
+                        <th>ID</th>
+                        <th>Nombre</th>
+                        <th>Estado</th>
+                        <th>Participantes</th>
+                        <th>Fechas</th>
+                        <th class="text-center">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var t in trabajos)
+                    {
+                        <tr>
+                            <td>@t.Id</td>
+                            <td><strong>@t.Nombre</strong><br /><small class="text-muted">@t.TipoTrabajo</small></td>
+                            <td>
+                                <span class="badge bg-info text-dark">
+                                    @(EstadoEvento.Estado(t.FechaInicioRegistro, t.FechaFinRegistro, t.FechaInicioTrabajo, t.FechaFinTrabajo))
+                                </span>
+                            </td>
+                            <td>@t.Participantes.Count personas</td>
+                            <td>
+                                <small>Reg: @t.FechaInicioRegistro.ToShortDateString() - @t.FechaFinRegistro?.ToShortDateString()</small>
+                            </td>
+                            <td class="text-center">
+                                <button class="btn btn-sm btn-outline-secondary" @onclick="() => VerDetalles(t)">Detalles</button>
+                                <button class="btn btn-sm btn-outline-info" @onclick="() => IniciarEdicion(t)">Editar</button>
+                                <Tooltip Title="Doble clic para eliminar" Placement="TooltipPlacement.Top" Color="TooltipColor.Danger" c>
+                                    <button class="btn btn-sm btn-outline-danger" @ondblclick="() => EliminarTrabajo(t.Id)">Eliminar</button>
+   
+                                </Tooltip>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+    else
+    {
+        <div class="card p-4 shadow">
+            <button class="btn btn-link p-0 mb-3" @onclick="() => trabajoDetalle = null">« Volver a la lista</button>
+            <h3>Detalles: @trabajoDetalle.Nombre</h3>
+            <hr />
+            
+            <div class="row">
+                <div class="col-md-6">
+                    <h5>Inscribir Nuevo Participante</h5>
+                    @if (EstadoEvento.isRegistroAbierto(trabajoDetalle.FechaInicioRegistro, trabajoDetalle.FechaFinRegistro))
+                    {
+                        <div class="input-group mb-3">
+                            <input class="form-control" @bind="nuevoParticipanteId" placeholder="ID del Usuario" />
+                            <button class="btn btn-success" @onclick="AgregarParticipante">Inscribir</button>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="alert alert-warning">El periodo de registro ha finalizado.</div>
+                    }
+                </div>
+                
+                <div class="col-md-6">
+                    <h5>Lista de Participantes</h5>
+                    <ul class="list-group">
+                        @foreach (var pId in trabajoDetalle.Participantes)
+                        {
+                            var user = Usuario.usuarios.FirstOrDefault(u => u.Id == pId);
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                @(user?.Name ?? "Usuario no encontrado") (@pId)
+                                <button class="btn btn-sm btn-danger" @onclick="() => EliminarParticipante(pId)">×</button>
+                            </li>
+                        }
+                    </ul>
+                </div>
             </div>
-        }
-        else
-        {
-            <div class="alert alert-warning">El registro está cerrado para este trabajo.</div>
-        }
-
-        <h5>Participantes:</h5>
-        <ul>
-            @foreach (var p in trabajoDetalle.Participantes)
-            {
-                <li>
-                    @Usuario.usuarios.FirstOrDefault(u => u.Id.Contains(p))?.Name
-                    ID: @Usuario.usuarios.FirstOrDefault(u => u.Id.Contains(p))?.Id  Nombre: @Usuario.usuarios.FirstOrDefault(u => u.Id.Contains(p))?.Name
-
-                    <button class="btn btn-sm btn-danger ms-2" @onclick="() => EliminarParticipante(p)">X</button>
-                </li>
-            }
-        </ul>
-    </div>
-}
+        </div>
+    }
+</div>
 
 @code {
-    private Trabajo nuevoTrabajo = new();
+    private Trabajo trabajoForm = new();
     private Trabajo? trabajoDetalle;
     private List<Trabajo> trabajos = new();
-    private string nuevoParticipante = "";
+    private bool isEditando = false;
+    private string nuevoParticipanteId = "";
 
     protected override async Task OnInitializedAsync()
     {
         await Usuario.Inicializar();
-        trabajos = Servicio.Trabajos.ToList();
+        RefrescarLista();
     }
+
+    private void RefrescarLista() => trabajos = Servicio.Trabajos.ToList();
+
     private void CrearTrabajo()
     {
-        Servicio.AgregarTrabajo(nuevoTrabajo);
-        nuevoTrabajo = new(); // Resetear formulario
+        if (string.IsNullOrWhiteSpace(trabajoForm.Nombre)) return;
+        Servicio.AgregarTrabajo(trabajoForm);
+        trabajoForm = new();
+        RefrescarLista();
+    }
+
+    private void IniciarEdicion(Trabajo t)
+    {
+        // Clonamos para no editar la referencia de la lista directamente
+        trabajoForm = t.Clone();
+        isEditando = true;
+    }
+
+    private void GuardarCambios()
+    {
+        Servicio.ActualizarTrabajo(trabajoForm);
+        CancelarEdicion();
+        RefrescarLista();
+    }
+
+    private void CancelarEdicion()
+    {
+        trabajoForm = new();
+        isEditando = false;
+    }
+
+    private void EliminarTrabajo(int id)
+    {
+        Servicio.EliminarTrabajo(id);
+        RefrescarLista();
     }
 
     private void VerDetalles(Trabajo t)
     {
         trabajoDetalle = t;
+        isEditando = false;
     }
 
     private void AgregarParticipante()
     {
-        if (!string.IsNullOrEmpty(nuevoParticipante) && trabajoDetalle != null)
+        if (!string.IsNullOrEmpty(nuevoParticipanteId) && trabajoDetalle != null)
         {
-            Servicio.AgregarParticipante(trabajoDetalle.Id, nuevoParticipante);
-            nuevoParticipante = "";
+            Servicio.AgregarParticipante(trabajoDetalle.Id, nuevoParticipanteId);
+            nuevoParticipanteId = "";
         }
     }
 
-    private void EliminarParticipante(string nombre)
+    private void EliminarParticipante(string id)
     {
         if (trabajoDetalle != null)
         {
-            Servicio.EliminarParticipante(trabajoDetalle.Id, nombre);
+            Servicio.EliminarParticipante(trabajoDetalle.Id, id);
         }
     }
 }

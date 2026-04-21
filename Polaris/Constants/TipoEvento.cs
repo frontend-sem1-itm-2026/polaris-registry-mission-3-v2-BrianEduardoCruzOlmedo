@@ -1,9 +1,9 @@
 ﻿namespace Polaris.Constants
 {
-    public static class TipoEvento
+    public partial class TipoEvento
     {
-        public const string Evento = "Evento";
-        public const string Proyecto = "Proyecto";
-        public const string Actividad = "Actividad";
+       
+        public static List<string> Tipos => new() { Evento, Proyecto, Actividad };
+
     }
 }

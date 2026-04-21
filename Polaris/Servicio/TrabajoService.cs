@@ -65,5 +65,22 @@ namespace Polaris.Servicio
             trabajo.Id = Trabajos.Count > 0 ? Trabajos.Max(t => t.Id) + 1 : 1;
             Trabajos.Add(trabajo);
         }
+        public void ActualizarTrabajo(Trabajo trabajoActualizado)
+        {
+            var index = Trabajos.FindIndex(t => t.Id == trabajoActualizado.Id);
+            if (index != -1)
+            {
+                Trabajos[index] = trabajoActualizado;
+            }
+        }
+
+        public void EliminarTrabajo(int id)
+        {
+            var trabajo = Trabajos.FirstOrDefault(t => t.Id == id);
+            if (trabajo != null)
+            {
+                Trabajos.Remove(trabajo);
+            }
+        }
     }
 }
