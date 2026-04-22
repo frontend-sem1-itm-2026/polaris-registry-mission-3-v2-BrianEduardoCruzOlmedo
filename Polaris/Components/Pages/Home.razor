@@ -34,51 +34,75 @@
     
 }
 
-<div class="container mt-4">
-    <div class="p-5 mb-4 bg-dark text-white rounded-3 shadow-lg">
-        <div class="container-fluid py-5 text-center">
-            <h1 class="display-5 fw-bold text-primary">PROGRAMA POLARIS</h1>
-            <p class="fs-4">Plataforma del programa universitario de formación en tecnologías espaciales.</p>
-            <p class="text-secondary">Instituto Tecnológico de Matamoros</p>
-            <hr class="my-4 border-secondary" />
-            
-            <Button Color="ButtonColor.Primary" Size="ButtonSize.Large" To="/Authenticacion" Type="ButtonType.Link">
-                <Icon Name="IconName.Rocket" /> Únete a POLARIS
+<div class="min-h-screen bg-gray-950">
+
+    {{-- Hero --}}
+    <div class="relative overflow-hidden bg-gradient-to-br from-gray-900 via-blue-950 to-gray-900 border-b border-gray-800">
+        <div class="absolute inset-0 opacity-10"
+             style="background-image: radial-gradient(circle at 25% 25%, #3b82f6 0%, transparent 50%), radial-gradient(circle at 75% 75%, #1d4ed8 0%, transparent 50%)">
+        </div>
+        <div class="relative max-w-5xl mx-auto px-6 py-24 text-center">
+            <div class="inline-flex items-center gap-2 bg-blue-600 bg-opacity-20 border border-blue-500 border-opacity-30 rounded-full px-4 py-1.5 mb-6">
+                <span class="w-2 h-2 rounded-full bg-blue-400 animate-pulse"></span>
+                <span class="text-blue-300 text-xs font-semibold tracking-wider uppercase">Instituto Tecnológico de Matamoros</span>
+            </div>
+            <h1 class="text-5xl font-black text-white tracking-tight mb-4">
+                PROGRAMA <span class="text-blue-400">POLARIS</span>
+            </h1>
+            <p class="text-gray-300 text-lg max-w-xl mx-auto mb-10 leading-relaxed">
+                Plataforma del programa universitario de formación en tecnologías espaciales.
+            </p>
+            <Button Color="ButtonColor.Primary" Size="ButtonSize.Large" To="/Authenticacion" Type="ButtonType.Link"
+                    class="rounded-xl px-8 py-3 font-bold shadow-lg shadow-blue-900 hover:shadow-blue-700 transition-all duration-200 text-base">
+                <Icon Name="IconName.Rocket" class="me-2" /> Únete a POLARIS
             </Button>
         </div>
     </div>
 
-    <section class="mt-5 pb-5">
-        <div class="d-flex align-items-center mb-4">
-            <Icon Name="IconName.Grid3X3GapFill" Size="IconSize.x3" Class="me-2 text-primary" />
-            <h2 class="mb-0">Proyectos y Equipos</h2>
+    {{-- Proyectos --}}
+    <div class="max-w-5xl mx-auto px-6 py-16">
+        <div class="flex items-center gap-3 mb-10">
+            <Icon Name="IconName.Grid3X3GapFill" Size="IconSize.x3" Class="text-blue-500" />
+            <div>
+                <h2 class="text-2xl font-bold text-white mb-0">Proyectos y Equipos</h2>
+                <p class="text-gray-500 text-sm mt-0.5">Iniciativas activas del programa</p>
+            </div>
         </div>
-        
+
         <div class="row g-4">
             <div class="col-md-4">
-                <Card Class="shadow-sm border-0 bg-light">
-                    <CardBody>
-                        <CardTitle tag="h5">PolariX</CardTitle>
-                        <CardText>Desarrollo de cohetería y propulsión.</CardText>
+                <Card Class="bg-gray-900 border border-gray-800 rounded-2xl shadow-xl hover:border-blue-700 hover:shadow-blue-950 transition-all duration-200 h-100">
+                    <CardBody Class="p-5">
+                        <div class="w-10 h-10 rounded-xl bg-blue-600 bg-opacity-20 flex items-center justify-center mb-4">
+                            <Icon Name="IconName.Fire" Class="text-blue-400" />
+                        </div>
+                        <CardTitle tag="h5" Class="text-white font-bold text-base">PolariX</CardTitle>
+                        <CardText Class="text-gray-400 text-sm leading-relaxed">Desarrollo de cohetería y propulsión.</CardText>
                     </CardBody>
                 </Card>
             </div>
             <div class="col-md-4">
-                <Card Class="shadow-sm border-0 bg-light">
-                    <CardBody>
-                        <CardTitle tag="h5">Mentes en Órbita</CardTitle>
-                        <CardText>Investigación y divulgación científica.</CardText>
+                <Card Class="bg-gray-900 border border-gray-800 rounded-2xl shadow-xl hover:border-indigo-700 hover:shadow-indigo-950 transition-all duration-200 h-100">
+                    <CardBody Class="p-5">
+                        <div class="w-10 h-10 rounded-xl bg-indigo-600 bg-opacity-20 flex items-center justify-center mb-4">
+                            <Icon Name="IconName.Stars" Class="text-indigo-400" />
+                        </div>
+                        <CardTitle tag="h5" Class="text-white font-bold text-base">Mentes en Órbita</CardTitle>
+                        <CardText Class="text-gray-400 text-sm leading-relaxed">Investigación y divulgación científica.</CardText>
                     </CardBody>
                 </Card>
             </div>
             <div class="col-md-4">
-                <Card Class="shadow-sm border-0 bg-light">
-                    <CardBody>
-                        <CardTitle tag="h5">Hydronautas</CardTitle>
-                        <CardText>Simulación y robótica submarina.</CardText>
+                <Card Class="bg-gray-900 border border-gray-800 rounded-2xl shadow-xl hover:border-cyan-700 hover:shadow-cyan-950 transition-all duration-200 h-100">
+                    <CardBody Class="p-5">
+                        <div class="w-10 h-10 rounded-xl bg-cyan-600 bg-opacity-20 flex items-center justify-center mb-4">
+                            <Icon Name="IconName.Tsunami" Class="text-cyan-400" />
+                        </div>
+                        <CardTitle tag="h5" Class="text-white font-bold text-base">Hydronautas</CardTitle>
+                        <CardText Class="text-gray-400 text-sm leading-relaxed">Simulación y robótica submarina.</CardText>
                     </CardBody>
                 </Card>
             </div>
         </div>
-    </section>
+    </div>
 </div>
