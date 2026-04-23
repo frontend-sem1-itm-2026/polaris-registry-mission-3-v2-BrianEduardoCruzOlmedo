@@ -4,34 +4,43 @@
 @using Polaris.Modelo
 @inject TrabajoService Servicio
 @inject UsuarioService Usuario
-
-<div class="min-h-screen bg-gray-50 px-4 py-8">
+<div class="min-h-screen bg-gray-950 px-6 py-12 text-gray-100 font-sans">
     <div class="max-w-7xl mx-auto">
         
-        <div class="mb-8">
-            <h3 class="text-3xl font-bold text-gray-800 tracking-tight">
-                Gestión de Trabajos y Eventos
-            </h3>
-            <p class="text-gray-500 mt-1 text-sm">Administra registros, eventos y participantes del programa</p>
+        @* HEADER DEL MÓDULO *@
+        <div class="mb-10 flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-gray-800 pb-8">
+            <div>
+                <div class="inline-flex items-center gap-2 bg-blue-600/10 border border-blue-500/30 rounded-full px-3 py-1 mb-3">
+                    <span class="w-2 h-2 rounded-full bg-blue-400 animate-pulse"></span>
+                    <span class="text-blue-300 text-xs font-bold tracking-widest uppercase">Módulo Administrativo</span>
+                </div>
+                <h3 class="text-4xl font-black text-white tracking-tight">
+                    Gestión de <span class="text-blue-400">Trabajos y Eventos</span>
+                </h3>
+                <p class="text-gray-400 mt-2 max-w-2xl">Optimiza la tripulación y los cronogramas de los proyectos activos en la estación POLARIS.</p>
+            </div>
         </div>
 
         @if (trabajoDetalle == null)
         {
-            <div class="bg-white rounded-2xl shadow-xl border border-gray-100 p-6 mb-8">
-                <h4 class="text-lg font-semibold text-blue-600 mb-5 flex items-center gap-2">
-                    <span class="inline-block w-2 h-2 rounded-full bg-blue-500"></span>
-                    @(isEditando ? "Editar Trabajo" : "Nuevo Trabajo / Evento")
+            @* FORMULARIO (CREATE / UPDATE) *@
+            <div class="bg-gray-900 rounded-3xl shadow-2xl border border-gray-800 p-8 mb-12 relative overflow-hidden">
+                <div class="absolute top-0 left-0 w-1 h-full bg-blue-600"></div>
+                <h4 class="text-xl font-bold text-white mb-8 flex items-center gap-3">
+                    <Icon Name="@(isEditando ? IconName.PencilSquare : IconName.PlusCircleFill)" Class="text-blue-500" />
+                    @(isEditando ? "Editar Registro Existente" : "Crear Nuevo Trabajo / Evento")
                 </h4>
-                <div class="row g-3">
-                    <div class="col-md-3">
-                        <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">Nombre</label>
-                        <input type="text" class="form-control rounded-lg border-gray-200 focus:ring-2 focus:ring-blue-400" @bind="trabajoForm.Nombre" />
+                
+                <div class="grid-layout">
+                    <div class="span-4">
+                        <label class="custom-label">Nombre del Proyecto</label>
+                        <input type="text" class="custom-input" @bind="trabajoForm.Nombre" placeholder="Ej: Misión Artemis II" />
                     </div>
 
-                    <div class="col-md-3">
-                        <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">Tipo</label>
-                        <select class="form-select rounded-lg border-gray-200" @bind="trabajoForm.TipoTrabajo">
-                            <option value="">Seleccione...</option>
+                    <div class="span-3">
+                        <label class="custom-label">Categoría</label>
+                        <select class="custom-input" @bind="trabajoForm.TipoTrabajo">
+                            <option value="">Seleccione tipo...</option>
                             @foreach (var estado in TipoEvento.Tipos)
                             {
                                 <option value="@estado">@estado</option>
@@ -39,85 +48,101 @@
                         </select>
                     </div>
 
-                    <div class="col-md-6">
-                        <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">Descripción</label>
-                        <input type="text" class="form-control rounded-lg border-gray-200" @bind="trabajoForm.Descripcion" />
+                    <div class="span-5">
+                        <label class="custom-label">Descripción Breve</label>
+                        <input type="text" class="custom-input" @bind="trabajoForm.Descripcion" placeholder="Describe el objetivo..." />
                     </div>
 
-                    <div class="col-md-3">
-                        <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">Inicio Registro</label>
-                        <input type="date" class="form-control rounded-lg border-gray-200" @bind="trabajoForm.FechaInicioRegistro" />
+                    <div class="span-3">
+                        <label class="custom-label">Inicio Registro</label>
+                        <input type="date" class="custom-input" @bind="trabajoForm.FechaInicioRegistro" />
                     </div>
-                    <div class="col-md-3">
-                        <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">Fin Registro</label>
-                        <input type="date" class="form-control rounded-lg border-gray-200" @bind="trabajoForm.FechaFinRegistro" />
+                    <div class="span-3">
+                        <label class="custom-label">Fin Registro</label>
+                        <input type="date" class="custom-input" @bind="trabajoForm.FechaFinRegistro" />
                     </div>
-                    <div class="col-md-3">
-                        <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">Inicio @(trabajoForm.TipoTrabajo)</label>
-                        <input type="date" class="form-control rounded-lg border-gray-200" @bind="trabajoForm.FechaInicioTrabajo" />
+                    <div class="span-3">
+                        <label class="custom-label">Inicio Ejecución</label>
+                        <input type="date" class="custom-input" @bind="trabajoForm.FechaInicioTrabajo" />
                     </div>
-                    <div class="col-md-3">
-                        <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">Fin @(trabajoForm.TipoTrabajo)</label>
-                        <input type="date" class="form-control rounded-lg border-gray-200" @bind="trabajoForm.FechaFinTrabajo" />
+                    <div class="span-3">
+                        <label class="custom-label">Fin Ejecución</label>
+                        <input type="date" class="custom-input" @bind="trabajoForm.FechaFinTrabajo" />
                     </div>
 
-                    <div class="col-12 text-end flex justify-end gap-2">
+                    <div class="span-12 flex justify-end gap-3 mt-4">
                         @if (isEditando)
                         {
-                            <button class="btn btn-success rounded-lg px-5 font-semibold shadow-sm" @onclick="GuardarCambios">Guardar Cambios</button>
-                            <button class="btn btn-secondary rounded-lg px-5 ms-2" @onclick="CancelarEdicion">Cancelar</button>
+                            <button class="btn-secondary" @onclick="CancelarEdicion">Cancelar</button>
+                            <button class="btn-primary bg-indigo-600" @onclick="GuardarCambios">Actualizar Datos</button>
                         }
                         else
                         {
-                            <button class="btn btn-primary rounded-lg px-6 font-semibold shadow-sm" @onclick="CrearTrabajo">Crear Registro</button>
+                            <button class="btn-primary bg-blue-600" @onclick="CrearTrabajo">
+                                <Icon Name="IconName.PlusLg" /> Crear Registro
+                            </button>
                         }
                     </div>
                 </div>
             </div>
 
-            <div class="bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden">
-                <div class="table-responsive">
-                    <table class="table table-hover align-middle mb-0">
-                        <thead class="bg-gray-800 text-white">
-                            <tr>
-                                <th class="py-4 px-4 text-xs font-semibold uppercase tracking-wider text-gray-300">ID</th>
-                                <th class="py-4 px-4 text-xs font-semibold uppercase tracking-wider text-gray-300">Nombre</th>
-                                <th class="py-4 px-4 text-xs font-semibold uppercase tracking-wider text-gray-300">Estado</th>
-                                <th class="py-4 px-4 text-xs font-semibold uppercase tracking-wider text-gray-300">Participantes</th>
-                                <th class="py-4 px-4 text-xs font-semibold uppercase tracking-wider text-gray-300">Fechas</th>
-                                <th class="py-4 px-4 text-xs font-semibold uppercase tracking-wider text-gray-300 text-center">Acciones</th>
+            @* TABLA DE VISUALIZACIÓN (READ) *@
+            <div class="bg-gray-900 rounded-3xl shadow-2xl border border-gray-800 overflow-hidden">
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="bg-gray-800/50 border-b border-gray-800">
+                                <th class="table-th">ID</th>
+                                <th class="table-th">Información</th>
+                                <th class="table-th text-center">Estado</th>
+                                <th class="table-th">Participantes</th>
+                                <th class="table-th">Fechas</th>
+                                <th class="table-th text-center">Acciones</th>
                             </tr>
                         </thead>
-                        <tbody class="divide-y divide-gray-100">
+                        <tbody class="divide-y divide-gray-800">
                             @foreach (var t in trabajos)
                             {
-                                <tr class="hover:bg-blue-50 transition-colors duration-150">
-                                    <td class="px-4 py-3 text-gray-400 font-mono text-sm">#@t.Id</td>
-                                    <td class="px-4 py-3">
-                                        <span class="font-semibold text-gray-800">@t.Nombre</span>
-                                        <br />
-                                        <span class="text-xs text-gray-400 bg-gray-100 px-2 py-0.5 rounded-full">@t.TipoTrabajo</span>
+                                <tr class="hover:bg-blue-900/10 transition-colors">
+                                    <td class="px-6 py-5 font-mono text-blue-500 text-sm">#@t.Id</td>
+                                    <td class="px-6 py-5">
+                                        <div class="font-bold text-white text-lg">@t.Nombre</div>
+                                        <span class="text-[10px] uppercase font-black bg-blue-900/40 text-blue-300 px-2 py-0.5 rounded border border-blue-800/50">@t.TipoTrabajo</span>
                                     </td>
-                                    <td class="px-4 py-3">
-                                        <span class="badge bg-cyan-100 text-cyan-800 rounded-full px-3 py-1 text-xs font-semibold">
-                                            @(EstadoEvento.Estado(t.FechaInicioRegistro, t.FechaFinRegistro, t.FechaInicioTrabajo, t.FechaFinTrabajo))
+                                    <td class="px-6 py-5 text-center">
+                                        @{
+                                            var estadoStr = EstadoEvento.Estado(t.FechaInicioRegistro, t.FechaFinRegistro, t.FechaInicioTrabajo, t.FechaFinTrabajo);
+                                            var isAbierto = estadoStr.Contains("Abierto");
+                                        }
+                                        <span class="status-badge @(isAbierto ? "status-open" : "status-closed")">
+                                            @estadoStr
                                         </span>
                                     </td>
-                                    <td class="px-4 py-3">
-                                        <span class="inline-flex items-center gap-1 text-sm text-gray-600">
-                                            <span class="font-semibold text-gray-800">@t.Participantes.Count</span> personas
-                                        </span>
+                                    <td class="px-6 py-5">
+                                        <div class="flex items-center gap-2">
+                                            <div class="w-8 h-8 rounded-full bg-gray-800 border border-gray-700 flex items-center justify-center text-xs font-bold text-blue-400">
+                                                @t.Participantes.Count
+                                            </div>
+                                            <span class="text-xs text-gray-500 uppercase">miembros</span>
+                                        </div>
                                     </td>
-                                    <td class="px-4 py-3">
-                                        <small class="text-gray-500 text-xs">Reg: @t.FechaInicioRegistro.ToShortDateString() — @t.FechaFinRegistro?.ToShortDateString()</small>
+                                    <td class="px-6 py-5">
+                                        <div class="text-[11px] text-gray-400 space-y-1">
+                                            <div>Reg: @t.FechaInicioRegistro.ToShortDateString()</div>
+                                            <div>Ejec: @t.FechaInicioTrabajo.ToShortDateString()</div>
+                                        </div>
                                     </td>
-                                    <td class="px-4 py-3 text-center">
-                                        <div class="flex justify-center gap-1">
-                                            <button class="btn btn-sm btn-outline-secondary rounded-lg text-xs px-3" @onclick="() => VerDetalles(t)">Detalles</button>
-                                            <button class="btn btn-sm btn-outline-info rounded-lg text-xs px-3" @onclick="() => IniciarEdicion(t)">Editar</button>
-                                            <Tooltip Title="Doble clic para eliminar" Placement="TooltipPlacement.Top" Color="TooltipColor.Danger">
-                                                <button class="btn btn-sm btn-outline-danger rounded-lg text-xs px-3" @ondblclick="() => EliminarTrabajo(t.Id)">Eliminar</button>
-                                            </Tooltip>
+                                    <td class="px-6 py-5 text-center">
+                                        <div class="flex justify-center gap-2">
+                                            <button class="action-btn hover:bg-blue-600" title="Ver" @onclick="() => VerDetalles(t)">
+                                                <Icon Name="IconName.EyeFill" />
+                                            </button>
+                                            <button class="action-btn hover:bg-indigo-600" title="Editar" @onclick="() => IniciarEdicion(t)">
+                                                <Icon Name="IconName.PencilFill" />
+                                            </button>
+                                            <button class="action-btn hover:bg-red-600" @ondblclick="() => EliminarTrabajo(t.Id)">
+                                                <Icon Name="IconName.Trash3Fill" />
+                                            </button>
                                         </div>
                                     </td>
                                 </tr>
@@ -129,50 +154,111 @@
         }
         else
         {
-            <div class="bg-white rounded-2xl shadow-xl border border-gray-100 p-8">
-                <button class="inline-flex items-center gap-1 text-blue-600 hover:text-blue-800 text-sm font-medium mb-6 transition-colors" @onclick="() => trabajoDetalle = null">
-                    ← Volver a la lista
+            @* VISTA DE DETALLES Y GESTIÓN DE PARTICIPANTES *@
+            <div class="bg-gray-900 rounded-3xl shadow-2xl border border-gray-800 p-10 relative overflow-hidden">
+                <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-600 to-indigo-600"></div>
+                
+                <button class="text-blue-400 hover:text-blue-300 font-bold text-sm mb-8 flex items-center gap-2 group" @onclick="() => trabajoDetalle = null">
+                    <Icon Name="IconName.ArrowLeft" Class="group-hover:-translate-x-1 transition-transform" /> Volver al listado
                 </button>
-                <h3 class="text-2xl font-bold text-gray-800 mb-1">@trabajoDetalle.Nombre</h3>
-                <div class="border-t border-gray-100 my-4"></div>
 
-                <div class="row">
-                    <div class="col-md-6">
-                        <h5 class="font-semibold text-gray-700 mb-3">Inscribir Nuevo Participante</h5>
+                <div class="flex flex-col md:flex-row justify-between mb-10">
+                    <div>
+                        <h3 class="text-3xl font-black text-white">@trabajoDetalle.Nombre</h3>
+                        <p class="text-gray-400 mt-1">@trabajoDetalle.Descripcion</p>
+                    </div>
+                </div>
+
+                <div class="grid-layout">
+                    @* Inscribir *@
+                    <div class="span-6 bg-gray-800/30 rounded-2xl p-6 border border-gray-800">
+                        <h5 class="text-lg font-bold text-white mb-6 flex items-center gap-2">
+                            <Icon Name="IconName.PersonPlusFill" Class="text-green-500" /> Inscribir Nuevo Miembro
+                        </h5>
+                        
                         @if (EstadoEvento.isRegistroAbierto(trabajoDetalle.FechaInicioRegistro, trabajoDetalle.FechaFinRegistro))
                         {
-                            <div class="input-group mb-3 rounded-xl overflow-hidden shadow-sm">
-                                <input class="form-control border-gray-200" @bind="nuevoParticipanteId" placeholder="ID del Usuario" />
-                                <button class="btn btn-success px-5 font-semibold" @onclick="AgregarParticipante">Inscribir</button>
+                            <div class="flex gap-2">
+                                <input class="custom-input" @bind="nuevoParticipanteId" placeholder="Matrícula del Usuario" />
+                                <button class="btn-primary bg-green-600 hover:bg-green-500" @onclick="AgregarParticipante">Inscribir</button>
                             </div>
                         }
                         else
                         {
-                            <div class="alert alert-warning rounded-xl border-l-4 border-yellow-400 bg-yellow-50 text-yellow-800 text-sm">El periodo de registro ha finalizado.</div>
+                            <div class="bg-yellow-500/10 border border-yellow-500/30 rounded-xl p-4 text-yellow-500 text-sm">
+                                Inscripción cerrada actualmente.
+                            </div>
                         }
                     </div>
 
-                    <div class="col-md-6">
-                        <h5 class="font-semibold text-gray-700 mb-3">Lista de Participantes</h5>
-                        <ul class="list-group rounded-xl overflow-hidden shadow-sm divide-y divide-gray-100">
+                    @* Lista *@
+                    <div class="span-6">
+                        <h5 class="text-lg font-bold text-white mb-6 flex items-center gap-2">
+                            <Icon Name="IconName.PeopleFill" Class="text-blue-500" /> Tripulación Asignada
+                        </h5>
+                        <div class="space-y-3 max-h-80 overflow-y-auto custom-scrollbar pr-2">
                             @foreach (var pId in trabajoDetalle.Participantes)
                             {
                                 var user = Usuario.usuarios.FirstOrDefault(u => u.Id == pId);
-                                <li class="list-group-item d-flex justify-content-between align-items-center py-3 px-4 hover:bg-gray-50 transition-colors">
-                                    <div>
-                                        <span class="font-medium text-gray-800">@(user?.Name ?? "Usuario no encontrado")</span>
-                                        <span class="text-xs text-gray-400 ms-2">(@pId)</span>
+                                <div class="bg-gray-800/50 border border-gray-800 rounded-xl p-4 flex justify-between items-center">
+                                    <div class="flex items-center gap-3">
+                                        <div class="w-10 h-10 rounded-full bg-blue-600/20 flex items-center justify-center font-bold text-blue-400 border border-blue-500/20 text-xs">
+                                            @(user?.Name?[0] ?? '?')
+                                        </div>
+                                        <div>
+                                            <div class="font-bold text-white text-sm">@(user?.Name ?? "N/A")</div>
+                                            <div class="text-[10px] text-gray-500 font-mono">ID: @pId</div>
+                                        </div>
                                     </div>
-                                    <button class="btn btn-sm btn-danger rounded-lg w-7 h-7 d-flex align-items-center justify-content-center p-0 text-xs" @onclick="() => EliminarParticipante(pId)">×</button>
-                                </li>
+                                    <button class="text-gray-500 hover:text-red-400 transition-colors" @onclick="() => EliminarParticipante(pId)">
+                                        <Icon Name="IconName.XCircleFill" />
+                                    </button>
+                                </div>
                             }
-                        </ul>
+                        </div>
                     </div>
                 </div>
             </div>
         }
     </div>
 </div>
+
+<style>
+    /* Clases de Soporte para Tailwind faltante */
+    .grid-layout { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 1.5rem; }
+    .span-3 { grid-column: span 12 / span 12; }
+    .span-4 { grid-column: span 12 / span 12; }
+    .span-5 { grid-column: span 12 / span 12; }
+    .span-6 { grid-column: span 12 / span 12; }
+    .span-12 { grid-column: span 12 / span 12; }
+
+    @@media (min-width: 768px) {
+        .span-3 { grid-column: span 3 / span 3; }
+        .span-4 { grid-column: span 4 / span 4; }
+        .span-5 { grid-column: span 5 / span 5; }
+        .span-6 { grid-column: span 6 / span 6; }
+    }
+
+    .custom-label { display: block; font-size: 0.7rem; font-weight: 700; color: #6b7280; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.5rem; margin-left: 0.25rem; }
+    .custom-input { width: 100%; background-color: #1f2937; border: 1px solid #374151; color: white; border-radius: 0.75rem; padding: 0.65rem 1rem; transition: all 0.2s; outline: none; }
+    .custom-input:focus { border-color: #3b82f6; box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2); }
+
+    .btn-primary { color: white; font-weight: 700; padding: 0.65rem 2rem; border-radius: 0.75rem; transition: all 0.2s; display: inline-flex; items-center: center; gap: 0.5rem; border: none; cursor: pointer; }
+    .btn-primary:hover { opacity: 0.9; transform: translateY(-1px); }
+    .btn-secondary { background-color: #374151; color: white; font-weight: 700; padding: 0.65rem 2rem; border-radius: 0.75rem; border: none; cursor: pointer; }
+
+    .table-th { padding: 1.25rem 1.5rem; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: #6b7280; }
+    .status-badge { inline-flex: flex; align-items: center; padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: 0.7rem; font-weight: 700; border: 1px solid currentColor; }
+    .status-open { background-color: rgba(34, 197, 94, 0.1); color: #4ade80; }
+    .status-closed { background-color: rgba(239, 68, 68, 0.1); color: #f87171; }
+
+    .action-btn { padding: 0.5rem; background-color: #1f2937; color: #9ca3af; border-radius: 0.5rem; transition: all 0.2s; border: none; cursor: pointer; }
+    .action-btn:hover { color: white; }
+
+    .custom-scrollbar::-webkit-scrollbar { width: 5px; }
+    .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+    .custom-scrollbar::-webkit-scrollbar-thumb { background: #374151; border-radius: 10px; }
+</style>
 @code {
     private Trabajo trabajoForm = new();
     private Trabajo? trabajoDetalle;

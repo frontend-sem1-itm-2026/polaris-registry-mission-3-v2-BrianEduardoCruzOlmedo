@@ -7,136 +7,207 @@
 <Toasts class="p-3" Messages="messages" AutoHide="true" Delay="4000" Placement="ToastsPlacement.TopRight" />
 <ConfirmDialog @ref="dialog" />
 
-<div class="min-h-screen bg-gray-50 px-4 py-8">
-    <div class="max-w-6xl mx-auto">
+<div class="min-h-screen bg-gray-950 px-6 py-12 text-gray-100 font-sans">
+    <div class="max-w-7xl mx-auto">
 
-        <a href="/" class="inline-flex items-center gap-2 text-sm text-gray-600 hover:text-gray-900 font-medium mb-6 transition-colors bg-white border border-gray-200 rounded-xl px-4 py-2 shadow-sm hover:shadow-md">
-            <i class="bi bi-arrow-left"></i> Regresar a Inicio
-        </a>
+        @* BOTÓN REGRESAR *@
+        <div class="mb-8">
+            <a href="/" class="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-gray-400 hover:text-blue-400 transition-colors group">
+                <Icon Name="IconName.ArrowLeft" Class="group-hover:-translate-x-1 transition-transform" /> 
+                Regresar al Cuartel General
+            </a>
+        </div>
 
-        <div class="flex items-center gap-3 mb-6">
-            <div class="w-10 h-10 rounded-xl bg-blue-600 flex items-center justify-center">
-                <i class="bi bi-people-fill text-white text-lg"></i>
-            </div>
+        @* ENCABEZADO *@
+        <div class="mb-10 flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-gray-800 pb-8">
             <div>
-                <h2 class="text-2xl font-bold text-gray-800 mb-0">Gestión de Miembros</h2>
-                <p class="text-gray-400 text-sm">CRUD de usuarios del programa</p>
+                <div class="inline-flex items-center gap-2 bg-indigo-600/10 border border-indigo-500/30 rounded-full px-3 py-1 mb-3">
+                    <span class="w-2 h-2 rounded-full bg-indigo-400 animate-pulse"></span>
+                    <span class="text-indigo-300 text-[10px] font-bold tracking-widest uppercase">Directorio de Tripulación</span>
+                </div>
+                <h2 class="text-4xl font-black text-white tracking-tight">
+                    Gestión de <span class="text-indigo-400">Miembros</span>
+                </h2>
+                <p class="text-gray-400 mt-2 max-w-2xl">Administra los perfiles, roles y accesos de los usuarios registrados en el sistema POLARIS.</p>
+            </div>
+            
+            <div class="flex gap-3">
+                <div class="bg-gray-900 border border-gray-800 rounded-2xl px-6 py-3 flex items-center gap-4">
+                    <div class="text-right">
+                        <div class="text-[10px] font-bold text-gray-500 uppercase tracking-tighter">Total Miembros</div>
+                        <div class="text-xl font-black text-white">@Lusuarios.Count</div>
+                    </div>
+                    <div class="w-10 h-10 rounded-full bg-indigo-600/20 flex items-center justify-center border border-indigo-500/20">
+                        <Icon Name="IconName.PeopleFill" Class="text-indigo-400" />
+                    </div>
+                </div>
             </div>
         </div>
 
-        <div class="bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden mb-6">
-            <table class="table table-striped table-hover mb-0">
-                <thead class="bg-gray-800 text-white">
-                    <tr>
-                        <th class="py-4 px-5 text-xs font-semibold uppercase tracking-wider text-gray-300">Nombre</th>
-                        <th class="py-4 px-5 text-xs font-semibold uppercase tracking-wider text-gray-300">Correo</th>
-                        <th class="py-4 px-5 text-xs font-semibold uppercase tracking-wider text-gray-300">Rol</th>
-                        <th class="py-4 px-5 text-xs font-semibold uppercase tracking-wider text-gray-300">Acciones</th>
-                    </tr>
-                </thead>
-                <tbody class="divide-y divide-gray-100">
-                    @if (usuarioService.usuarios.Count == 0)
-                    {
-                        <tr>
-                            <td colspan="4" class="text-center text-gray-400 py-12 text-sm italic">No hay usuarios cargados en memoria.</td>
+        @if (modoEdicion)
+        {
+            @* FORMULARIO DE EDICIÓN (MODERNO) *@
+            <div class="bg-gray-900 rounded-3xl shadow-2xl border border-gray-800 p-8 mb-12 relative overflow-hidden">
+                <div class="absolute top-0 left-0 w-1 h-full bg-indigo-500"></div>
+                <h4 class="text-xl font-bold text-white mb-8 flex items-center gap-3">
+                    <Icon Name="IconName.PersonBoundingBox" Class="text-indigo-400" />
+                    Editando Perfil: <span class="text-indigo-400">@usuarioActual.Name</span>
+                </h4>
+
+                <div class="grid-layout">
+                    <div class="span-4">
+                        <label class="custom-label">Nombre Completo</label>
+                        <input type="text" class="custom-input" @bind="usuarioActual.Name" />
+                    </div>
+                    <div class="span-4">
+                        <label class="custom-label">Correo Electrónico</label>
+                        <input type="email" class="custom-input" @bind="usuarioActual.Email" />
+                    </div>
+                    <div class="span-4">
+                        <label class="custom-label">Contraseña de Acceso</label>
+                        <input type="text" class="custom-input" @bind="usuarioActual.Password" />
+                    </div>
+                    <div class="span-12 flex justify-end gap-3 mt-4">
+                        <button class="btn-secondary" @onclick="() => modoEdicion = false">Cancelar</button>
+                        <button class="btn-primary bg-indigo-600" @onclick="ActualizarUsuario">
+                            <Icon Name="IconName.CheckLg" /> Confirmar Cambios
+                        </button>
+                    </div>
+                </div>
+            </div>
+        }
+
+        @* LISTA DE USUARIOS (TABLA ESTILO POLARIS) *@
+        <div class="bg-gray-900 rounded-3xl shadow-2xl border border-gray-800 overflow-hidden">
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse">
+                    <thead>
+                        <tr class="bg-gray-800/50 border-b border-gray-800">
+                            <th class="table-th">Tripulante</th>
+                            <th class="table-th">Identificador</th>
+                            <th class="table-th">Contacto</th>
+                            <th class="table-th">Credenciales</th>
+                            <th class="table-th text-center">Acciones</th>
                         </tr>
-                    }
-                    else
-                    {
-                        @foreach (var user in usuarioService.usuarios)
+                    </thead>
+                    <tbody class="divide-y divide-gray-800">
+                        @foreach (var user in Lusuarios)
                         {
-                            <tr class="hover:bg-blue-50 transition-colors duration-150">
-                                <td class="align-middle px-5 py-3 font-medium text-gray-800">@user.Name</td>
-                                <td class="align-middle px-5 py-3 text-gray-500 text-sm">@user.Email</td>
-                                <td class="align-middle px-5 py-3">
-                                    <span class="bg-indigo-100 text-indigo-700 text-xs font-semibold px-3 py-1 rounded-full">@user.Rol_actual</span>
+                            <tr class="hover:bg-indigo-900/10 transition-colors">
+                                <td class="px-6 py-5">
+                                    <div class="flex items-center gap-4">
+                                        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-gray-800 to-gray-900 border border-gray-700 flex items-center justify-center font-black text-indigo-400">
+                                            @(user.Name?[0] ?? 'U')
+                                        </div>
+                                        <div class="font-bold text-white text-base">@user.Name</div>
+                                    </div>
                                 </td>
-                                <td class="align-middle px-5 py-3">
-                                    <div class="flex gap-2">
-                                        <button class="btn btn-warning btn-sm rounded-lg px-3 font-medium shadow-sm" @onclick="() => PrepararEdicion(user)">
-                                            <i class="bi bi-pencil me-1"></i> Editar
+                                <td class="px-6 py-5">
+                                    <span class="font-mono text-xs text-indigo-500 bg-indigo-500/5 px-2 py-1 rounded border border-indigo-500/20">
+                                        ID_@user.Id
+                                    </span>
+                                </td>
+                                <td class="px-6 py-5 text-gray-400 text-sm">
+                                    @user.Email
+                                </td>
+                                <td class="px-6 py-5">
+                                    <div class="flex items-center gap-2">
+                                        <span class="text-gray-600 font-mono text-xs">••••••••</span>
+                                        <Icon Name="IconName.ShieldLockFill" Class="text-gray-700 text-xs" />
+                                    </div>
+                                </td>
+                                <td class="px-6 py-5">
+                                    <div class="flex justify-center gap-2">
+                                        <button class="action-btn hover:bg-indigo-600" title="Editar Perfil" @onclick="() => IniciarEdicion(user)">
+                                            <Icon Name="IconName.PencilSquare" />
                                         </button>
-                                        <button class="btn btn-danger btn-sm rounded-lg px-3 font-medium shadow-sm" @onclick="() => ConfirmarBorrado(user)">
-                                            <i class="bi bi-trash me-1"></i> Eliminar
+                                        <button class="action-btn hover:bg-red-600" title="Eliminar" @onclick="() => ConfirmarBorrado(user)">
+                                            <Icon Name="IconName.PersonDashFill" />
                                         </button>
                                     </div>
                                 </td>
                             </tr>
                         }
-                    }
-                </tbody>
-            </table>
-        </div>
-
-        @if (modoEdicion)
-        {
-            <div class="bg-white rounded-2xl shadow-xl border-l-4 border-yellow-400 overflow-hidden">
-                <div class="bg-yellow-50 border-b border-yellow-100 px-6 py-4">
-                    <p class="font-semibold text-yellow-800 text-sm mb-0">
-                        <i class="bi bi-pencil-square me-2"></i> Editando información de: <span class="font-bold">@usuarioActual.Name</span>
-                    </p>
-                </div>
-                <div class="p-6">
-                    <div class="row">
-                        <div class="col-md-4 mb-3">
-                            <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">Nombre</label>
-                            <input class="form-control rounded-lg border-gray-200" @bind="usuarioActual.Name" />
-                        </div>
-                        <div class="col-md-4 mb-3">
-                            <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">Correo</label>
-                            <input class="form-control rounded-lg border-gray-200" @bind="usuarioActual.Email" type="email" />
-                        </div>
-                        <div class="col-md-4 mb-3">
-                            <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">Rol</label>
-                            <input class="form-control rounded-lg border-gray-200" @bind="usuarioActual.Rol_actual" />
-                        </div>
-                    </div>
-                    <div class="flex gap-2 mt-2">
-                        <button class="btn btn-success rounded-lg px-5 font-semibold shadow-sm" @onclick="ConfirmarGuardado">Guardar Cambios</button>
-                        <button class="btn btn-secondary rounded-lg px-5" @onclick="() => modoEdicion = false">Cancelar</button>
-                    </div>
-                </div>
+                    </tbody>
+                </table>
             </div>
-        }
+            @if (!(Lusuarios.Any()))
+            {
+                <div class="p-20 text-center">
+                    <Icon Name="IconName.People" Size="IconSize.x1" Class="text-gray-800 mb-4" />
+                    <p class="text-gray-600 italic">No se han detectado tripulantes en la base de datos.</p>
+                </div>
+            }
+        </div>
     </div>
 </div>
 
-@code {
-    private ConfirmDialog dialog = default!;
-    private bool modoEdicion = false;
-    private Usuario usuarioActual = new Usuario();
-    List<ToastMessage> messages = new List<ToastMessage>();
+<style>
+    /* Clases de Layout y Componentes Personalizados */
+    .grid-layout { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 1.5rem; }
+    .span-4 { grid-column: span 12 / span 12; }
+    .span-12 { grid-column: span 12 / span 12; }
 
-    private void MostrarNotificacion(string titulo, string msj, bool exito)
-    {
-        messages.Add(new ToastMessage
-        {
-            Type = exito ? ToastType.Success : ToastType.Danger,
-            Title = titulo,
-            HelpText = $"{DateTime.Now:HH:mm:ss}",
-            Message = msj
-        });
+    @@media (min-width: 768px) {
+        .span-4 { grid-column: span 4 / span 4; }
     }
+
+    .custom-label { display: block; font-size: 0.7rem; font-weight: 700; color: #6b7280; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.5rem; margin-left: 0.25rem; }
+    .custom-input { width: 100%; background-color: #1f2937; border: 1px solid #374151; color: white; border-radius: 0.75rem; padding: 0.65rem 1rem; transition: all 0.2s; outline: none; }
+    .custom-input:focus { border-color: #6366f1; box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.2); }
+
+    .btn-primary { color: white; font-weight: 700; padding: 0.65rem 1.5rem; border-radius: 0.75rem; transition: all 0.2s; display: inline-flex; align-items: center; gap: 0.5rem; border: none; cursor: pointer; }
+    .btn-primary:hover { opacity: 0.9; transform: translateY(-1px); }
+    .btn-secondary { background-color: #374151; color: white; font-weight: 700; padding: 0.65rem 1.5rem; border-radius: 0.75rem; border: none; cursor: pointer; }
+
+    .table-th { padding: 1.25rem 1.5rem; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: #6b7280; }
+    
+    .action-btn { padding: 0.5rem 0.75rem; background-color: #1f2937; color: #9ca3af; border-radius: 0.6rem; transition: all 0.2s; border: none; cursor: pointer; }
+    .action-btn:hover { color: white; transform: scale(1.05); }
+</style>
+
+@code {
+    public List<Usuario> Lusuarios { get; set; } = new();
+    private Usuario usuarioActual = new();
+    private bool modoEdicion = false;
+    private ConfirmDialog dialog = default!;
+    private List<ToastMessage> messages = new();
 
     protected override async Task OnInitializedAsync()
     {
-        await usuarioService.Inicializar();
+        await CargarUsuarios();
     }
 
-    private void PrepararEdicion(Usuario user)
+    private async Task CargarUsuarios()
     {
-        modoEdicion = true;
+        await usuarioService.Inicializar();
+        Lusuarios = usuarioService.usuarios;
+    }
+
+    private void MostrarNotificacion(string titulo, string mensaje, bool? tipo)
+    {
+        messages.Add(new ToastMessage
+        {
+           Type = tipo == null ? ToastType.Info : (!(tipo??false )? ToastType.Danger : ToastType.Success),
+            Title = titulo,
+            Message = mensaje,
+            HelpText = $"{DateTime.Now:HH:mm}"
+        });
+    }
+
+    private void IniciarEdicion(Usuario user)
+    {
         usuarioActual = new Usuario
         {
             Id = user.Id,
             Name = user.Name,
             Email = user.Email,
-            Rol_actual = user.Rol_actual
+            Password = user.Password
         };
+        modoEdicion = true;
     }
 
-    // --- NUEVO: CONFIRMACIÓN PARA GUARDAR ---
-    private async Task ConfirmarGuardado()
+    private async Task ActualizarUsuario()
     {
         var opciones = new ConfirmDialogOptions
         {
@@ -146,8 +217,8 @@
         };
 
         var confirmado = await dialog.ShowAsync(
-            title: "¿Confirmar cambios?",
-            message1: $"¿Estás seguro que quieres actualizar los datos de {usuarioActual.Name}?",
+            title: "Confirmar Actualización",
+            message1: $"¿Deseas aplicar los cambios al perfil de {usuarioActual.Name}?",
             confirmDialogOptions: opciones);
 
         if (confirmado)
@@ -155,10 +226,10 @@
             var resultado = await usuarioService.ActualizarUsuario(usuarioActual);
             MostrarNotificacion(resultado.title, resultado.msj, resultado.state);
             modoEdicion = false;
+            await CargarUsuarios();
         }
     }
 
-    // --- NUEVO: CONFIRMACIÓN PARA BORRAR ---
     private async Task ConfirmarBorrado(Usuario user)
     {
         var opciones = new ConfirmDialogOptions
@@ -169,15 +240,16 @@
         };
 
         var confirmado = await dialog.ShowAsync(
-            title: "¡Advertencia de eliminación!",
-            message1: $"¿Estás completamente seguro de eliminar a {user.Name}?",
-            message2: "Esta acción no se puede deshacer.",
+            title: "¡Advertencia de Seguridad!",
+            message1: $"¿Estás seguro de eliminar a {user.Name} de la tripulación?",
+            message2: "Esta acción revocará todos sus accesos de forma permanente.",
             confirmDialogOptions: opciones);
 
         if (confirmado)
         {
             var resultado = await usuarioService.EliminarUsuario(user.Id);
             MostrarNotificacion(resultado.title, resultado.msj, resultado.state);
+            await CargarUsuarios();
         }
     }
 }

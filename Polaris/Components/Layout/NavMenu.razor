@@ -1,41 +1,50 @@
-﻿<div class="top-row ps-3 navbar navbar-dark">
-    <div class="container-fluid">
-        <a class="navbar-brand" href="">Polaris</a>
+﻿<div class="h-100 bg-gray-950 border-r border-gray-800 transition-all duration-300 flex flex-column @(isCollapsed ? "w-16" : "w-64")">
+    
+    <div class="h-16 flex items-center justify-center px-4 cursor-pointer hover:bg-gray-900" @onclick="ToggleSidebar">
+        <i class="bi bi-list text-white text-2xl"></i>
     </div>
-</div>
 
-<input type="checkbox" title="Navigation menu" class="navbar-toggler" />
+    <nav class="flex flex-column mt-4 gap-2 px-2">
+        
+        <NavLink class="nav-link-custom" href="" Match="NavLinkMatch.All">
+            <i class="bi bi-house-door-fill text-xl"></i>
+            <span class="ml-4 transition-opacity duration-300 @(isCollapsed ? "opacity-0 hidden" : "opacity-100")">Inicio</span>
+        </NavLink>
 
-<div class="nav-scrollable" onclick="document.querySelector('.navbar-toggler').click()">
-    <nav class="nav flex-column">
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-                <span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span> Inicio
-            </NavLink>
-        </div>
+        <NavLink class="nav-link-custom" href="gestionador-trabajos">
+            <i class="bi bi-list-nested text-xl"></i>
+            <span class="ml-4 transition-opacity duration-300 @(isCollapsed ? "opacity-0 hidden" : "opacity-100")">Eventos</span>
+        </NavLink>
 
-        @* <div class="nav-item px-3">
-            <NavLink class="nav-link" href="counter">
-                <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> Equipos
-            </NavLink>
-        </div> *@
+        <NavLink class="nav-link-custom" href="Authenticacion">
+            <i class="bi bi-person-plus-fill text-xl"></i>
+            <span class="ml-4 transition-opacity duration-300 @(isCollapsed ? "opacity-0 hidden" : "opacity-100")">Únete</span>
+        </NavLink>
 
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="gestionador-trabajos">
-                <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Eventos
-            </NavLink>
-        </div>
+        <NavLink class="nav-link-custom" href="gestion">
+            <i class="bi bi-people-fill text-xl"></i>
+            <span class="ml-4 transition-opacity duration-300 @(isCollapsed ? "opacity-0 hidden" : "opacity-100")">Gestión</span>
+        </NavLink>
 
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="Authenticacion">
-                <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Únete a POLARIS
-            </NavLink>
-        </div>
-
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="gestion">
-                <span class="bi bi-people-fill" aria-hidden="true" style="margin-right: 0.8rem; font-size: 1.1rem; display: inline-flex; align-items: center; width: 1.5rem;"></span> Gestión
-            </NavLink>
-        </div>
     </nav>
 </div>
+
+@code {
+    private bool isCollapsed = true; // Empieza colapsado
+    private void ToggleSidebar() => isCollapsed = !isCollapsed;
+}
+
+<style>
+    .nav-link-custom {
+        display: flex;
+        align-items: center;
+        padding: 0.75rem;
+        border-radius: 0.75rem;
+        color: #9ca3af;
+        text-decoration: none;
+        white-space: nowrap; /* Evita que el texto salte de línea */
+        transition: all 0.2s;
+    }
+    .nav-link-custom:hover { background-color: #1f2937; color: white; }
+    .nav-link-custom.active { background-color: #2563eb; color: white; }
+</style>
