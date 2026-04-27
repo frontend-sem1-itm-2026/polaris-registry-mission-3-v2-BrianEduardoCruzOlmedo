@@ -3,42 +3,34 @@
 @inject NavigationManager Nav
 @inject UsuarioService usuarioService
 
-
-
 <Toasts class="p-3" Messages="messages" AutoHide="true" Delay="6000" Placement="ToastsPlacement.TopRight" />
 
-
-@code{
+@code {
     private ToastMessage CreateToastMessage(string title, string msj)
-  => new ToastMessage
-  {
-      Type = ToastType.Info,
-      Title = title,
-      HelpText = $"{DateTime.Now}",
-      Message = msj,
-  };
+        => new ToastMessage
+        {
+            Type = ToastType.Info,
+            Title = title,
+            HelpText = $"{DateTime.Now:HH:mm}",
+            Message = msj,
+        };
+
     List<ToastMessage> messages = new List<ToastMessage>();
+
     protected override async Task OnInitializedAsync()
     {
         var user = usuarioService.Usuario;
-        if (user == null )
+        if (user != null)
         {
-            //Nav.NavigateTo("/Authenticacion");
-        }
-        else
-        {
-            // como sabras nosostros usamos .razor
-            messages.Add(CreateToastMessage($"Hola Bienvenido {user.Name}", @"Vaya ya te extrañabamos ;)"));
+            messages.Add(CreateToastMessage($"Acceso Autorizado: {user.Name}", "Protocolo de bienvenida activado. El sistema está nominal."));
         }
     }
-    
 }
 
-<div class="min-h-screen bg-gray-950 text-gray-100 font-sans selection:bg-blue-500/30">
+<div class="min-h-screen bg-gray-950 text-gray-100 font-sans selection:bg-blue-500/30 pb-12">
 
     @* --- HERO SECTION --- *@
     <div class="relative overflow-hidden bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-blue-900/20 via-gray-950 to-gray-950 border-b border-gray-800/50 pt-20 pb-32">
-        @* Decoración de fondo *@
         <div class="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-5 pointer-events-none"></div>
         
         <div class="max-w-7xl mx-auto px-6 relative z-10 text-center">
@@ -47,94 +39,158 @@
                   <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
                   <span class="relative inline-flex rounded-full h-2 w-2 bg-blue-500"></span>
                 </span>
-                <span class="text-blue-400 text-[10px] font-black uppercase tracking-[0.2em]">Protocolo Polaris Activo</span>
+                <span class="text-blue-400 text-[10px] font-black uppercase tracking-[0.2em]">SISTEMA POLARIS v1.0 ONLINE</span>
             </div>
 
-            <h1 class="text-6xl md:text-8xl font-black tracking-tighter text-white mb-6">
+            <h1 class="text-6xl md:text-8xl font-black tracking-tighter text-white mb-4">
                 ESTACIÓN <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-indigo-400 to-cyan-400">POLARIS</span>
             </h1>
+
+            <div class="flex justify-center items-center gap-3 mb-10">
+                <span class="h-px w-8 bg-gray-800"></span>
+                <p class="text-blue-500 font-mono text-sm uppercase tracking-widest font-bold">Desarrollado por: Team Alpha Polaris</p>
+                <span class="h-px w-8 bg-gray-800"></span>
+            </div>
             
             <p class="text-gray-400 text-lg md:text-xl max-w-3xl mx-auto leading-relaxed mb-10 font-light">
-                Sistema centralizado para la coordinación de misiones, gestión de tripulación y monitoreo de objetivos estratégicos.
+                Plataforma de comando unificada para la gestión de misiones críticas, control de tripulación y trazabilidad de objetivos estratégicos.
             </p>
 
             <div class="flex flex-wrap justify-center gap-4">
-                <button @onclick='() => Nav.NavigateTo("/gestionador-trabajos")' class="btn-hero-primary">
-                    <Icon Name="IconName.RocketTakeOffFill" /> Explorar Misiones
+                <button @onclick='() => Nav.NavigateTo("/dashboard")' class="btn-hero-primary">
+                    <Icon Name="IconName.Grid1X2Fill" /> Panel de Control
                 </button>
-                <button @onclick='() => Nav.NavigateTo("/gestion")' class="btn-hero-secondary">
-                    <Icon Name="IconName.ShieldLockFill" /> Terminal de Seguridad
-                </button>
+                <a href="https://github.com/TuUsuario/TuRepositorio" target="_blank" class="btn-hero-secondary">
+                    <Icon Name="IconName.Github" /> Repositorio Base
+                </a>
             </div>
         </div>
     </div>
 
-    @* --- GRID DE ACCESO RÁPIDO --- *@
-    <div class="max-w-7xl mx-auto px-6 -mt-16 relative z-20 pb-20">
+    @* --- GRID DE MÓDULOS PRINCIPALES --- *@
+    <div class="max-w-7xl mx-auto px-6 -mt-16 relative z-20 mb-20">
         <div class="grid-layout">
             
-            @* Tarjeta: Mentes en Órbita *@
-            <div class="span-4 group">
-                <div class="card-polaris">
+            @* Tarjeta: Miembros *@
+            <div @onclick='() => Nav.NavigateTo("/miembros")' class="span-4 group cursor-pointer">
+                <div class="card-polaris border-indigo-500/30">
                     <div class="card-icon-container bg-indigo-600/10 border-indigo-500/20 text-indigo-400 group-hover:bg-indigo-600 group-hover:text-white">
-                        <Icon Name="IconName.Stars" Size="IconSize.x4" />
+                        <Icon Name="IconName.PeopleFill" Size="IconSize.x4" />
                     </div>
-                    <h5 class="text-xl font-bold text-white mb-3">Mentes en Órbita</h5>
+                    <h5 class="text-xl font-bold text-white mb-2 italic tracking-tight">Registro de Mentes</h5>
+                    <p class="text-indigo-400 text-[10px] font-black uppercase mb-4 tracking-widest">Módulo: Miembros (CRUD)</p>
                     <p class="text-gray-400 text-sm leading-relaxed mb-6">
-                        Portal de investigación y divulgación científica para la tripulación avanzada.
+                        Administración centralizada de la tripulación. Alta, baja y edición de perfiles especializados.
                     </p>
                     <div class="mt-auto pt-4 border-t border-gray-800/50 flex justify-between items-center text-[10px] font-bold uppercase tracking-widest text-indigo-400">
-                        <span>Estado: Estable</span>
+                        <span>Terminal Activa</span>
                         <Icon Name="IconName.ChevronRight" />
                     </div>
                 </div>
             </div>
 
-            @* Tarjeta: Hydronautas *@
-            <div class="span-4 group">
-                <div class="card-polaris">
+            @* Tarjeta: Proyectos/Eventos *@
+            <div @onclick='() => Nav.NavigateTo("/gestionador-trabajos")' class="span-4 group cursor-pointer">
+                <div class="card-polaris border-cyan-500/30">
                     <div class="card-icon-container bg-cyan-600/10 border-cyan-500/20 text-cyan-400 group-hover:bg-cyan-600 group-hover:text-white">
-                        <Icon Name="IconName.Tsunami" Size="IconSize.x4" />
+                        <Icon Name="IconName.RocketTakeOffFill" Size="IconSize.x4" />
                     </div>
-                    <h5 class="text-xl font-bold text-white mb-3">Hydronautas</h5>
+                    <h5 class="text-xl font-bold text-white mb-2 italic tracking-tight">Log de Misiones</h5>
+                    <p class="text-cyan-400 text-[10px] font-black uppercase mb-4 tracking-widest">Módulo: Eventos (CRUD)</p>
                     <p class="text-gray-400 text-sm leading-relaxed mb-6">
-                        Monitoreo de sistemas de soporte vital y recursos hídricos de la estación.
+                        Seguimiento de proyectos y eventos en curso. Monitoreo de objetivos e hitos temporales.
                     </p>
                     <div class="mt-auto pt-4 border-t border-gray-800/50 flex justify-between items-center text-[10px] font-bold uppercase tracking-widest text-cyan-400">
-                        <span>Estado: Operativo</span>
+                        <span>Despliegue Listado</span>
                         <Icon Name="IconName.ChevronRight" />
                     </div>
                 </div>
             </div>
 
-            @* Tarjeta: Sistemas Críticos *@
-            <div class="span-4 group">
-                <div class="card-polaris">
+            @* Tarjeta: Equipo *@
+            <div @onclick='() => Nav.NavigateTo("/equipo")' class="span-4 group cursor-pointer">
+                <div class="card-polaris border-blue-500/30">
                     <div class="card-icon-container bg-blue-600/10 border-blue-500/20 text-blue-400 group-hover:bg-blue-600 group-hover:text-white">
-                        <Icon Name="IconName.CpuFill" Size="IconSize.x4" />
+                        <Icon Name="IconName.ShieldCheck" Size="IconSize.x4" />
                     </div>
-                    <h5 class="text-xl font-bold text-white mb-3">Sistemas Críticos</h5>
+                    <h5 class="text-xl font-bold text-white mb-2 italic tracking-tight">Núcleo del Equipo</h5>
+                    <p class="text-blue-400 text-[10px] font-black uppercase mb-4 tracking-widest">Módulo: Información</p>
                     <p class="text-gray-400 text-sm leading-relaxed mb-6">
-                        Acceso a núcleos de procesamiento y registros de errores del servidor central.
+                        Datos técnicos de los desarrolladores y arquitectura del sistema POLARIS.
                     </p>
                     <div class="mt-auto pt-4 border-t border-gray-800/50 flex justify-between items-center text-[10px] font-bold uppercase tracking-widest text-blue-400">
-                        <span>Mantenimiento Requerido</span>
-                        <Icon Name="IconName.ExclamationTriangleFill" />
+                        <span>Ver Desarrolladores</span>
+                        <Icon Name="IconName.ChevronRight" />
                     </div>
                 </div>
             </div>
 
         </div>
     </div>
+
+    <div class="max-w-7xl mx-auto px-6 py-16">
+    @* Contenedor con efecto de cristal y borde sutil *@
+    <div class="bg-gray-900/40 border border-gray-800/50 rounded-[2.5rem] p-8 md:p-12 backdrop-blur-2xl relative overflow-hidden">
+        
+        @* Decoración de fondo para dar profundidad *@
+        <div class="absolute -top-24 -right-24 w-48 h-48 bg-blue-500/10 blur-[100px] rounded-full"></div>
+        
+        <h3 class="text-xs font-black text-center mb-12 tracking-[0.5em] uppercase text-info">
+            Comando de Operaciones
+        </h3>
+
+        @* Cambio de Flex a Grid: 1 columna en móvil, 2 en tablets, 4 en desktop *@
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-y-12 gap-x-8">
+            
+            @* Integrante 1 *@
+            <div class="flex flex-col items-center text-center group">
+                <div class="mb-4 p-3 rounded-2xl bg-blue-500 border border-blue-500/10 group-hover:border-blue-500/40 transition-all duration-500">
+                     <Icon Name="IconName.PersonBadge" Class="text-blue-400/50 group-hover:text-blue-400" />
+                </div>
+                <p class="text-white font-bold text-sm md:text-base tracking-tight mb-1">Brian Eduardo Cruz Olmedo</p>
+                <p class="text-[10px] text-blue-500 font-black uppercase tracking-widest opacity-70">Software Lead</p>
+            </div>
+
+            @* Integrante 2 *@
+            <div class="flex flex-col items-center text-center group">
+                <div class="mb-4 p-3 rounded-2xl bg-blue-500 border border-indigo-500/10 group-hover:border-indigo-500/40 transition-all duration-500">
+                     <Icon Name="IconName.CodeSquare" Class="text-indigo-400/50 group-hover:text-indigo-400" />
+                </div>
+                <p class="text-white font-bold text-sm md:text-base tracking-tight mb-1">Abel Gil Zamora</p>
+                <p class="text-[10px] text-blue-500 font-black uppercase tracking-widest opacity-70">Core Developer</p>
+            </div>
+
+            @* Integrante 3 *@
+            <div class="flex flex-col items-center text-center group">
+                <div class="mb-4 p-3 rounded-2xl bg-blue-500 border border-cyan-500/10 group-hover:border-cyan-500/40 transition-all duration-500">
+                     <Icon Name="IconName.GearWideConnected" Class="text-cyan-400/50 group-hover:text-cyan-400" />
+                </div>
+                <p class="text-white font-bold text-sm md:text-base tracking-tight mb-1">Julián Álvarez Roque</p>
+                <p class="text-[10px] text-blue-500 font-black uppercase tracking-widest opacity-70">Software Associate</p>
+            </div>
+
+            @* Integrante 4 *@
+            <div class="flex flex-col items-center text-center group">
+                <div class="mb-4 p-3 rounded-2xl bg-blue-500 border border-slate-500/10 group-hover:border-slate-500/40 transition-all duration-500">
+                     <Icon Name="IconName.Terminal" Class="text-slate-400/50 group-hover:text-slate-400" />
+                </div>
+                <p class="text-white font-bold text-sm md:text-base tracking-tight mb-1">Cesar Alejandro Molina Bautista</p>
+                <p class="text-[10px] text-blue-500 font-black uppercase tracking-widest opacity-70">Software Associate</p>
+            </div>
+
+        </div>
+    </div>
+    
+</div>
 </div>
 
 <style>
-    /* Soporte de Layout Grid */
+    /* Estructura del Grid */
     .grid-layout { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 1.5rem; }
     .span-4 { grid-column: span 12 / span 12; }
     @@media (min-width: 768px) { .span-4 { grid-column: span 4 / span 4; } }
 
-    /* Estilos de Botones Hero */
+    /* Botones Estilo Sci-Fi */
     .btn-hero-primary { 
         background: linear-gradient(to right, #2563eb, #4f46e5); 
         color: white; font-weight: 800; padding: 1rem 2.5rem; border-radius: 1rem;
@@ -147,27 +203,30 @@
         background: rgba(31, 41, 55, 0.5); color: white; font-weight: 800; padding: 1rem 2.5rem; 
         border-radius: 1rem; display: inline-flex; align-items: center; gap: 0.75rem; 
         border: 1px solid rgba(75, 85, 99, 0.5); backdrop-blur: md; cursor: pointer; transition: all 0.3s;
+        text-decoration: none;
     }
     .btn-hero-secondary:hover { background: rgba(55, 65, 81, 0.8); border-color: #4b5563; }
 
-    /* Estilos de Tarjetas */
+    /* Tarjetas de Acceso Modulares */
     .card-polaris {
-        height: 100%; display: flex; flex-direction: column; background-color: #111827; 
-        border: 1px solid #1f2937; border-radius: 2rem; padding: 2rem; 
+        height: 100%; display: flex; flex-direction: column; background-color: rgba(17, 24, 39, 0.8); 
+        border-width: 1px; border-style: solid; border-radius: 2rem; padding: 2rem; 
         transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); position: relative; overflow: hidden;
+        backdrop-blur: sm;
     }
     .card-polaris:hover { 
-        transform: translateY(-10px); border-color: #374151; 
+        transform: translateY(-10px); 
         box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5); 
+        background-color: rgba(17, 24, 39, 1);
     }
     .card-polaris::before {
-        content: ''; position: absolute; top: 0; left: 0; width: 100%; h: 100%;
-        background: radial-gradient(circle at 50% 0%, rgba(59, 130, 246, 0.05), transparent 70%);
+        content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+        background: radial-gradient(circle at 50% 0%, rgba(59, 130, 246, 0.1), transparent 70%);
         pointer-events: none;
     }
 
     .card-icon-container {
-        width: 3.5rem; h: 3.5rem; border-radius: 1rem; display: flex; align-items: center; 
+        width: 4rem; height: 4rem; border-radius: 1.25rem; display: flex; align-items: center; 
         justify-content: center; margin-bottom: 1.5rem; border-width: 1px; border-style: solid;
         transition: all 0.3s;
     }
