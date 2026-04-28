@@ -89,9 +89,9 @@
 
 }
 
-<EditForm EditContext="@editContext" style="margin:5px 0px" class="form-container">
+<EditForm EditContext="@editContext" style="margin:5px 0px" class="grid grid-cols-1 md:grid-cols-12 gap-6 mb-8 overflow-scroll">
     <DataAnnotationsValidator />
-    <div class="form-group row mb-3">
+    <div class="col-span-1 md:col-span-6">
         <label class="col-12 col-md-4 col-form-label">@GetDisplayName(nameof(usuario.Foto)): <span class="text-danger">*</span></label>
         <div class="col">
             <InputFile OnChange="@(e => OnInputFileChange(e))" />

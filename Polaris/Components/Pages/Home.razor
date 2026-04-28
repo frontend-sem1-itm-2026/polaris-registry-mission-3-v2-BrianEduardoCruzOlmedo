@@ -29,43 +29,30 @@
 
 <div class="min-h-screen bg-gray-950 text-gray-100 font-sans selection:bg-blue-500/30 pb-12">
 
-    @* --- HERO SECTION --- *@
-    <div class="relative overflow-hidden bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-blue-900/20 via-gray-950 to-gray-950 border-b border-gray-800/50 pt-20 pb-32">
-        <div class="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-5 pointer-events-none"></div>
+    <div class="relative overflow-hidden border-b border-gray-800/50 pt-16 sm:pt-20 pb-20 sm:pb-32">
         
-        <div class="max-w-7xl mx-auto px-6 relative z-10 text-center">
-            <div class="inline-flex items-center gap-2 bg-blue-500/10 border border-blue-500/20 rounded-full px-4 py-1.5 mb-8 backdrop-blur-md">
-                <span class="relative flex h-2 w-2">
-                  <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
-                  <span class="relative inline-flex rounded-full h-2 w-2 bg-blue-500"></span>
-                </span>
-                <span class="text-blue-400 text-[10px] font-black uppercase tracking-[0.2em]">SISTEMA POLARIS v1.0 ONLINE</span>
-            </div>
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 md:px-8 text-center">
 
-            <h1 class="text-6xl md:text-8xl font-black tracking-tighter text-white mb-4">
-                ESTACIÓN <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-indigo-400 to-cyan-400">POLARIS</span>
+            <h1 class="text-3xl sm:text-5xl md:text-6xl lg:text-8xl font-black mb-4">
+                ESTACIÓN <span class="text-blue-400">POLARIS</span>
             </h1>
 
-            <div class="flex justify-center items-center gap-3 mb-10">
-                <span class="h-px w-8 bg-gray-800"></span>
-                <p class="text-blue-500 font-mono text-sm uppercase tracking-widest font-bold">Desarrollado por: Team Alpha Polaris</p>
-                <span class="h-px w-8 bg-gray-800"></span>
-            </div>
-            
-            <p class="text-gray-400 text-lg md:text-xl max-w-3xl mx-auto leading-relaxed mb-10 font-light">
-                Plataforma de comando unificada para la gestión de misiones críticas, control de tripulación y trazabilidad de objetivos estratégicos.
+            <p class="text-gray-400 text-sm sm:text-base md:text-lg max-w-3xl mx-auto mb-8">
+                Plataforma de comando unificada para la gestión de misiones.
             </p>
 
-            <div class="flex flex-wrap justify-center gap-4">
+            <div class="flex flex-col sm:flex-row justify-center gap-4">
                 <button @onclick='() => Nav.NavigateTo("/dashboard")' class="btn-hero-primary">
-                    <Icon Name="IconName.Grid1X2Fill" /> Panel de Control
+                    Panel de Control
                 </button>
-                <a href="https://github.com/TuUsuario/TuRepositorio" target="_blank" class="btn-hero-secondary">
-                    <Icon Name="IconName.Github" /> Repositorio Base
+                <a href="#" class="btn-hero-secondary">
+                    Repositorio
                 </a>
             </div>
         </div>
     </div>
+
+    
 
     @* --- GRID DE MÓDULOS PRINCIPALES --- *@
     <div class="max-w-7xl mx-auto px-6 -mt-16 relative z-20 mb-20">

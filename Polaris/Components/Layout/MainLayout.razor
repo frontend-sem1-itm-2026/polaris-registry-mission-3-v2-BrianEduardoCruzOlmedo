@@ -1,14 +1,40 @@
 ﻿@inherits LayoutComponentBase
 
-<div class="page flex h-screen overflow-hidden">
-    
-    <div class="vh-100">
+<div class="flex h-screen overflow-hidden bg-gray-950 text-gray-100">
+
+    <div class="hidden md:flex flex-shrink-0 transition-all duration-300">
         <NavMenu />
     </div>
 
-    <main class="flex-1 overflow-auto bg-gray-950">
-        <article class="content p-4">
-            @Body
-        </article>
-    </main>
+    <div class="flex flex-col flex-1 min-w-0 overflow-hidden">
+
+        <div class="md:hidden flex items-center justify-between p-4 border-b border-gray-800 bg-gray-900">
+            <button @onclick="ToggleMenu" class="text-blue-400 text-2xl">
+                <i class="bi bi-list"></i>
+            </button>
+            <span class="font-bold tracking-tighter text-blue-500">POLARIS</span>
+        </div>
+
+        @if (menuOpen)
+        {
+            <div class="fixed inset-0 z-50 flex md:hidden">
+                <div class="fixed inset-0 bg-black/70 backdrop-blur-sm" @onclick="ToggleMenu"></div>
+                <div class="relative bg-gray-950 h-full shadow-2xl border-r border-gray-800">
+                    @* Forzamos a que el NavMenu no esté colapsado cuando se abre en móvil *@
+                    <NavMenu ForceExpand="true" />
+                </div>
+            </div>
+        }
+
+        <main class="flex-1 overflow-auto bg-gray-950">
+            <article class="p-4 md:p-8">
+                @Body
+            </article>
+        </main>
+    </div>
 </div>
+
+@code {
+    private bool menuOpen = false;
+    private void ToggleMenu() => menuOpen = !menuOpen;
+}

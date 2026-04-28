@@ -1,44 +1,48 @@
-﻿<div class="h-100 bg-gray-950 border-r border-gray-800 transition-all duration-300 flex flex-column @(isCollapsed ? "w-16" : "w-64")">
+﻿<div class="h-full bg-gray-950 border-r border-gray-800 transition-all duration-300 flex flex-col @(GetCollapseClass())">
     
-    <div class="h-16 flex items-center justify-center px-4 cursor-pointer hover:bg-gray-900" @onclick="ToggleSidebar">
+    @* El botón de colapso solo se muestra en Desktop *@
+    <div class="h-16 hidden md:flex items-center justify-center px-4 cursor-pointer hover:bg-gray-900" @onclick="ToggleSidebar">
         <i class="bi bi-list text-white text-2xl"></i>
     </div>
 
-    <nav class="flex flex-column mt-4 gap-2 px-2">
-        
+    <nav class="flex flex-col mt-4 gap-2 px-2 overflow-y-auto">
         <NavLink class="nav-link-custom" href="" Match="NavLinkMatch.All">
             <i class="bi bi-house-door-fill text-xl"></i>
-            <span class="ml-4 transition-opacity duration-300 @(isCollapsed ? "opacity-0 hidden" : "opacity-100")">Inicio</span>
+            <span class="ml-4 @(IsHidden())">Inicio</span>
         </NavLink>
 
         <NavLink class="nav-link-custom" href="gestionador-trabajos">
             <i class="bi bi-list-nested text-xl"></i>
-            <span class="ml-4 transition-opacity duration-300 @(isCollapsed ? "opacity-0 hidden" : "opacity-100")">Eventos</span>
+            <span class="ml-4 @(IsHidden())">Eventos</span>
         </NavLink>
 
         <NavLink class="nav-link-custom" href="Authenticacion">
             <i class="bi bi-person-plus-fill text-xl"></i>
-            <span class="ml-4 transition-opacity duration-300 @(isCollapsed ? "opacity-0 hidden" : "opacity-100")">Únete</span>
+            <span class="ml-4 @(IsHidden())">Únete</span>
         </NavLink>
 
         <NavLink class="nav-link-custom" href="gestion">
             <i class="bi bi-people-fill text-xl"></i>
-            <span class="ml-4 transition-opacity duration-300 @(isCollapsed ? "opacity-0 hidden" : "opacity-100")">Gestión</span>
+            <span class="ml-4 @(IsHidden())">Gestión</span>
         </NavLink>
-        <hr />
-        <NavLink class="nav-link-custom" href="equipo">
-            <i class="bi bi- text-xl"></i>
-            <Icon Name="IconName.PersonWorkspace"></Icon>
-            <span class="ml-4 transition-opacity duration-300 @(isCollapsed ? "opacity-0 hidden" : "opacity-100")">Equipo</span>
-        </NavLink>
-        
 
+        <hr class="border-gray-800 my-2" />
+
+        <NavLink class="nav-link-custom" href="equipo">
+            <i class="bi bi-person-workspace text-xl"></i>
+            <span class="ml-4 @(IsHidden())">Equipo</span>
+        </NavLink>
     </nav>
 </div>
 
 @code {
-    private bool isCollapsed = true; // Empieza colapsado
+    [Parameter] public bool ForceExpand { get; set; } = false;
+    private bool isCollapsed = true;
+
     private void ToggleSidebar() => isCollapsed = !isCollapsed;
+
+    private string GetCollapseClass() => (isCollapsed && !ForceExpand) ? "w-16" : "w-64";
+    private string IsHidden() => (isCollapsed && !ForceExpand) ? "hidden" : "block";
 }
 
 <style>
@@ -49,7 +53,7 @@
         border-radius: 0.75rem;
         color: #9ca3af;
         text-decoration: none;
-        white-space: nowrap; /* Evita que el texto salte de línea */
+        white-space: nowrap;
         transition: all 0.2s;
     }
     .nav-link-custom:hover { background-color: #1f2937; color: white; }
