@@ -10,7 +10,10 @@ namespace Polaris.Modelo
     {
 
         [DisplayName("Foto de Perfil")]
+        [Required(ErrorMessage = "La foto de perfil es obligatoria")]
         public byte[]? Foto { get; set; }
+
+       
         public async Task HandleFileSelection(IBrowserFile file)
         {
             var buffer = new byte[file.Size];

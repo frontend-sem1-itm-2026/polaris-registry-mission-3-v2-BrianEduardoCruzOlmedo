@@ -96,7 +96,7 @@
         <div class="col">
             <InputFile OnChange="@(e => OnInputFileChange(e))" />
                 <Image Src="@usuario.ImagenSrc"></Image>
-            <ValidationMessage For="@(() => usuario.Foto)" />
+            <ValidationMessage For="@(() => usuario.Foto)" class="text-red-500 text-[10px] font-bold uppercase" />
          
         </div>
     </div>
@@ -104,28 +104,28 @@
         <label class="col-12 col-md-4 col-form-label">@GetDisplayName(nameof(usuario.Name)): <span class="text-danger">*</span></label>
         <div class="col">
             <TextInput @bind-Value="@usuario.Name" Placeholder="@("Ingrese su " + GetDisplayName(nameof(usuario.Name)))" class="form-control" />
-            <ValidationMessage For="@(() => usuario.Name)" />
+            <ValidationMessage For="@(() => usuario.Name)" class="text-red-400 text-xs mt-1" />
         </div>
     </div>
     <div class="form-group row mb-3">
         <label class="col-12 col-md-4  col-form-label">@GetDisplayName(nameof(usuario.Email)): <span class="text-danger">*</span></label>
         <div class="col">
             <TextInput @bind-Value="@usuario.Email" Placeholder="@("Ingrese su " + GetDisplayName(nameof(usuario.Email)))" class="form-control" />
-            <ValidationMessage For="@(() => usuario.Email)" />
+            <ValidationMessage For="@(() => usuario.Email)" class="text-red-400 text-xs mt-1" />
         </div>
     </div>  
     <div class="form-group row mb-3">
         <label class="col-12 col-md-4 col-form-label">@GetDisplayName(nameof(usuario.Password)): <span class="text-danger">*</span></label>
         <div class="col">
             <PasswordInput @bind-Value="@usuario.Password" Placeholder="@("Ingrese su " + GetDisplayName(nameof(usuario.Password)))" class="form-control" />
-            <ValidationMessage For="@(() => usuario.Password)" />
+            <ValidationMessage For="@(() => usuario.Password)" class="text-red-400 text-xs mt-1" />
         </div>
     </div>  
     <div class="form-group row mb-3">
         <label class="col-12 col-md-4 col-form-label">@GetDisplayName(nameof(usuario.RPassword)): <span class="text-danger">*</span></label>
         <div class="col">
             <PasswordInput @bind-Value="@usuario.RPassword" Placeholder="Repita su Contraseña" class="form-control" />
-                <ValidationMessage For="@(() => usuario.RPassword)" />
+            <ValidationMessage For="@(() => usuario.RPassword)" class="text-red-400 text-xs mt-1" />
         </div>
     </div>  
     <div class="form-group row mb-3">
@@ -137,20 +137,22 @@
                     <option value="@item">@item.GetDisplayName()</option>
                 }
             </InputSelect>
+            <ValidationMessage For="@(() => usuario.Proyecto)" class="text-red-400 text-xs mt-1" />
         </div>
     </div>
     <div class="form-group row mb-3">
         <label class="col-12 col-md-4 col-form-label">@GetDisplayName(nameof(usuario.Telefono)): <span class="text-danger">*</span></label>
         <div class="col">
             <TextInput @bind-Value="@usuario.Telefono" Placeholder="Numero de 10 digitos" class="form-control" />
-            <ValidationMessage For="@(() => usuario.Telefono)" />
+            <ValidationMessage For="@(() => usuario.Telefono)" class="text-red-400 text-xs mt-1" />
+
         </div>
     </div>
     <div class="form-group row mb-3">
         <label class="col-12 col-md-4  col-form-label">@GetDisplayName(nameof(usuario.Instituto)): <span class="text-danger">*</span></label>
         <div class="col">
             <TextInput @bind-Value="@usuario.Instituto" Placeholder="@("Ingrese su " + GetDisplayName(nameof(usuario.Instituto)))" class="form-control" />
-            <ValidationMessage For="@(() => usuario.Instituto)" />
+            <ValidationMessage For="@(() => usuario.Instituto)" class="text-red-400 text-xs mt-1" />
         </div>
     </div>
     <div class="form-group row mb-3">
@@ -162,7 +164,7 @@
                           DataProvider="InstitutosDataProvider"
                           PropertyName=""
                           Placeholder="Search a customer..." />
-            <ValidationMessage For="@(() => usuario.Instituto)" />
+            <ValidationMessage For="@(() => usuario.Instituto)" class="text-red-400 text-xs mt-1" />
         </div>
     </div>
     
@@ -175,6 +177,7 @@
                     <option value="@((int)item)">@item.GetDisplayName()</option>
                 }
             </InputSelect>
+            <ValidationMessage For="@(() => usuario.Carrera)" class="text-red-400 text-xs mt-1" />
         </div>
     </div>
     <div class="form-group row mb-3">
@@ -186,6 +189,7 @@
                     <option value="@item">@item.GetDisplayName()</option>
                 }
             </InputSelect>
+            <ValidationMessage For="@(() => usuario.Semestre)" class="text-red-400 text-xs mt-1" />
         </div>
     </div>
     
@@ -198,6 +202,7 @@
                     <option value="@item">@item.GetDisplayName()</option>
                 }
             </InputSelect>
+            <ValidationMessage For="@(() => usuario.GenPolaris)" class="text-red-400 text-xs mt-1" />
         </div>
     </div>
     
@@ -210,6 +215,7 @@
                     <option value="@item">@item.GetDisplayName()</option>
                 }
             </InputSelect>
+            <ValidationMessage For="@(() => usuario.Habilidades)" class="text-red-400 text-xs mt-1" />
         </div>
     </div>
     <div class="form-group row mb-3">
@@ -221,7 +227,8 @@
                           DataProvider="InstitutosDataProvider"
                           PropertyName=""
                           Placeholder="Search a customer..." />
-            <ValidationMessage For="@(() => usuario.Lugar_actual)" />
+            <ValidationMessage For="@(() => usuario.Lugar_actual)" class="text-red-400 text-xs mt-1" />
+
         </div>
     </div>
     <div class="form-group row mb-3">
@@ -233,7 +240,7 @@
                           DataProvider="InstitutosDataProvider"
                           PropertyName=""
                           Placeholder="Search a customer..." />
-            <ValidationMessage For="@(() => usuario.Rol_actual)" />
+            <ValidationMessage For="@(() => usuario.Rol_actual)" class="text-red-400 text-xs mt-1" />
         </div>
     </div>
    
@@ -241,7 +248,7 @@
         <label class="col-12 col-md-4  col-form-label">@GetDisplayName(nameof(usuario.Interes_Polaris)): <span class="text-danger">*</span></label>
         <div class="col">
             <CheckboxInput @bind-Value="@usuario.Interes_Polaris" class="form-control" />
-            <ValidationMessage For="@(() => usuario.Interes_Polaris)" />
+            <ValidationMessage For="@(() => usuario.Interes_Polaris)" class="text-red-400 text-xs mt-1" />
         </div>
     </div>
 

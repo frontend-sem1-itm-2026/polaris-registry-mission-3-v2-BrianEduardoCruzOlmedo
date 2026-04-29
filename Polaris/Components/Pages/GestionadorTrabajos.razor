@@ -30,11 +30,13 @@
                     <Icon Name="@(isEditando ? IconName.PencilSquare : IconName.PlusCircleFill)" Class="text-blue-500" />
                     @(isEditando ? "Editar Registro Existente" : "Crear Nuevo Trabajo / Evento")
                 </h4>
-                
+                <EditForm>
+                    <DataAnnotationsValidator/>
                 <div class="grid-layout">
                     <div class="span-4">
                         <label class="custom-label">Nombre del Proyecto</label>
                         <input type="text" class="custom-input" @bind="trabajoForm.Nombre" placeholder="Ej: Misión Artemis II" />
+                        <ValidationMessage For="@(() => trabajoForm.Nombre)" class="text-red-500 text-sm mt-1" />
                     </div>
 
                     <div class="span-3">
@@ -46,28 +48,34 @@
                                 <option value="@estado">@estado</option>
                             }
                         </select>
+                        <ValidationMessage For="@(() => trabajoForm.TipoTrabajo)" class="text-red-500 text-sm mt-1" />
                     </div>
 
                     <div class="span-5">
                         <label class="custom-label">Descripción Breve</label>
                         <input type="text" class="custom-input" @bind="trabajoForm.Descripcion" placeholder="Describe el objetivo..." />
+                        <ValidationMessage For="@(() => trabajoForm.Descripcion)" class="text-red-500 text-sm mt-1" />
                     </div>
 
                     <div class="span-3">
                         <label class="custom-label">Inicio Registro</label>
                         <input type="date" class="custom-input" @bind="trabajoForm.FechaInicioRegistro" />
+                        <ValidationMessage For="@(() => trabajoForm.FechaInicioRegistro)" class="text-red-500 text-sm mt-1" />
                     </div>
                     <div class="span-3">
                         <label class="custom-label">Fin Registro</label>
                         <input type="date" class="custom-input" @bind="trabajoForm.FechaFinRegistro" />
+                        <ValidationMessage For="@(() => trabajoForm.FechaFinRegistro)" class="text-red-500 text-sm mt-1" />
                     </div>
                     <div class="span-3">
                         <label class="custom-label">Inicio Ejecución</label>
                         <input type="date" class="custom-input" @bind="trabajoForm.FechaInicioTrabajo" />
+                        <ValidationMessage For="@(() => trabajoForm.FechaInicioTrabajo)" class="text-red-500 text-sm mt-1" />
                     </div>
                     <div class="span-3">
                         <label class="custom-label">Fin Ejecución</label>
                         <input type="date" class="custom-input" @bind="trabajoForm.FechaFinTrabajo" />
+                        <ValidationMessage For="@(() => trabajoForm.FechaFinTrabajo)" class="text-red-500 text-sm mt-1" />
                     </div>
 
                     <div class="span-12 flex justify-end gap-3 mt-4">
@@ -84,6 +92,8 @@
                         }
                     </div>
                 </div>
+                
+                </EditForm>
             </div>
 
             @* TABLA DE VISUALIZACIÓN (READ) *@

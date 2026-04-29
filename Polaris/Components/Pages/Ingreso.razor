@@ -62,7 +62,7 @@
                            Placeholder="ejemplo@correo.com"
                            class="form-control" />
             </div>
-            <ValidationMessage For="@(() => usuario.Email)" class="small" />
+            <ValidationMessage For="@(() => usuario.Email)" class="text-red-400 text-xs mt-1" />
         </div>
     </div>
 
@@ -80,7 +80,7 @@
             <div class="form-text text-end">
                 <a href="/recuperar" class="text-decoration-none small">¿Olvidaste tu contraseña?</a>
             </div>
-            <ValidationMessage For="@(() => usuario.Password)" class="small" />
+            <ValidationMessage For="@(() => usuario.Password)" class="text-red-400 text-xs mt-1" />
         </div>
     </div>
     
