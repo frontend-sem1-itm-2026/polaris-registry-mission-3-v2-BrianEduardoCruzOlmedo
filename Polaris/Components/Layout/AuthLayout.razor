@@ -4,26 +4,41 @@
 @inherits LayoutComponentBase
 @implements IDisposable
 
-<div class="auth-container">
-    <iframe @key="fondoVideoService.linkVideo()"
-            src="@fondoVideoService.linkVideo()"
-            title="YouTube video player"
-            frameborder="0"
-            allow="autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-            referrerpolicy="strict-origin-when-cross-origin" class="video-overlay" allowfullscreen>
-    </iframe>
-    <div class="auth-box">
-        <div class="auth-header">
-            <img src="logo.png" alt="Logo" />
-            <h2>Bienvenido a Polaris</h2>
+<div class="relative min-h-screen w-full flex items-center justify-center overflow-hidden bg-black">
+    @* Video de fondo con overlay para mejorar legibilidad *@
+    <div class="absolute inset-0 z-0">
+        <iframe @key="fondoVideoService.linkVideo()"
+                src="@fondoVideoService.linkVideo()"
+                class="w-full h-full scale-[1.2] pointer-events-none opacity-40 grayscale-[0.5]"
+                frameborder="0"
+                allow="autoplay; encrypted-media">
+        </iframe>
+        <div class="absolute inset-0 bg-gradient-to-b from-gray-950/20 via-gray-950/60 to-gray-950"></div>
+    </div>
+
+    @* Contenedor Central *@
+    <div class="relative z-10 w-full px-4 flex flex-col items-center">
+        <div class="mb-8 text-center">
+            <div class="inline-block p-4 rounded-2xl bg-blue-600/10 border border-blue-500/20 mb-4 backdrop-blur-md">
+                <img src="logo.png" alt="Logo Polaris" class="h-16 w-auto" />
+            </div>
+            <h2 class="text-3xl font-black text-white tracking-tighter uppercase italic">
+                Estación <span class="text-blue-500">Polaris</span>
+            </h2>
+            <p class="text-gray-400 text-xs font-bold tracking-[0.3em] mt-2 uppercase">Protocolo de Autenticación</p>
         </div>
 
-        <div class="auth-content">
+        <div class="w-full flex justify-center">
             @Body
         </div>
+
+        <footer class="mt-12 text-[10px] text-gray-600 font-mono tracking-widest uppercase">
+            &copy; 2026 División de Ingeniería - Polaris Core
+        </footer>
     </div>
 </div>
-@code{
+
+@code {
     protected override void OnInitialized()
     {
         fondoVideoService.OnChange += StateHasChanged;
@@ -31,7 +46,6 @@
 
     public void Dispose()
     {
-
         fondoVideoService.OnChange -= StateHasChanged;
     }
 }

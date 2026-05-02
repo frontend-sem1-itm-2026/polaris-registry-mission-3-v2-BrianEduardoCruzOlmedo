@@ -30,7 +30,7 @@
                     <Icon Name="@(isEditando ? IconName.PencilSquare : IconName.PlusCircleFill)" Class="text-blue-500" />
                     @(isEditando ? "Editar Registro Existente" : "Crear Nuevo Trabajo / Evento")
                 </h4>
-                <EditForm>
+                <EditForm Model="trabajoForm">
                     <DataAnnotationsValidator/>
                 <div class="grid-layout">
                     <div class="span-4">

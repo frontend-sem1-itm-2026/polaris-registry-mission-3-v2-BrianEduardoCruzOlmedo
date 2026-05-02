@@ -46,13 +46,15 @@
     }
     
 }
-<EditForm EditContext="@editContext" class="login-container  p-4   mx-auto" style="max-width: 500px;">
+<EditForm EditContext="@editContext" class="login-container  p-4   mx-" style="max-width: 630px;">
     <DataAnnotationsValidator />
  
+    <!-- Contenedor principal con Grid de Bootstrap -->
+        
 
     @* Campo de Email *@
     <div class="form-group row mb-3 align-items-center">
-        <label class="col-12 col-md-4 col-form-label fw-bold">
+        <label class="col-12 col-md-4 col-form-label fw-bold text-blue-400 uppercase tracking-widest ml-1">
             @GetDisplayName(nameof(usuario.Email)): <span class="text-danger">*</span>
         </label>
         <div class="col">
@@ -68,7 +70,7 @@
 
     @* Campo de Password *@
     <div class="form-group row mb-4 align-items-center">
-        <label class="col-12 col-md-4 col-form-label fw-bold">
+        <label class="col-12 col-md-4 col-form-label fw-bold  text-blue-400 uppercase tracking-widest ml-1">
             @GetDisplayName(nameof(usuario.Password)): <span class="text-danger">*</span>
         </label>
         <div class="col">
@@ -96,7 +98,7 @@
 
     @* Opción de registro para usuarios nuevos *@
     <div class="text-center mt-4 pt-2 border-top">
-        <span class="text-muted">¿No tienes cuenta?</span>
+        <span class="text-gray-600">¿No tienes cuenta?</span>
         <a href="" class="fw-bold text-success text-decoration-none ms-1">Regístrate aquí</a>
     </div>
 </EditForm>

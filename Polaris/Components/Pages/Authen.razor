@@ -5,22 +5,26 @@
 @layout AuthLayout
 @inject UsuarioService usuarioService
 @inject NavigationManager nav
-<Tabs @ref="tabs" Position="TabPosition.Start" EnableFadeEffect="true" NavStyle="NavStyle.Tabs">
+<div class="w-full max-w-xl bg-gray-900/60 rounded-3xl mx-auto shadow-2xl overflow-hidden">
+
+    <Tabs @ref="tabs" Position="TabPosition.Start" EnableFadeEffect="true" NavStyle="NavStyle.Tabs" Class="polaris-tabs">
     <Tab Title="Registro" Active="true">
-        <Content>
+        <Content><div class="px-2 py-4">
             @((MarkupString)mensaje)
-            <Registro eventRegister="(it) =>onRegister(it)" />
+            <Registro eventRegister="(it) => onRegister(it)"  />
+                </div>
         </Content>
     </Tab>
     <Tab Title="Ingresar">
-        <Content>
+        <Content><div class="px-2 py-4">
             <Ingreso eventLogin="(it) => onLogin(it)" eventValidarCorreo="(it) => onValidarCorreo(it)"
                      eventRegistar="async ()=>{await tabs.ShowTabByIndexAsync(0);}" />
-        
+                    </div>
         </Content>
     </Tab>
                 
-</Tabs>
+    </Tabs>
+</div>
 <Toasts class="p-3" Messages="messages" AutoHide="true" Delay="6000" Placement="ToastsPlacement.TopRight" />
 
 @code {

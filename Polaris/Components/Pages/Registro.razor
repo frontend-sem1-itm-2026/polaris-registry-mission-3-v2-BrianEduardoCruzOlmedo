@@ -89,171 +89,127 @@
 
 }
 
-<EditForm EditContext="@editContext" style="margin:5px 0px" class="grid grid-cols-1 md:grid-cols-12 gap-6 mb-8 overflow-scroll">
+<EditForm EditContext="@editContext" style="" class="mb-8 overflow-hidden">
     <DataAnnotationsValidator />
-    <div class="col-span-1 md:col-span-6">
-        <label class="col-12 col-md-4 col-form-label">@GetDisplayName(nameof(usuario.Foto)): <span class="text-danger">*</span></label>
-        <div class="col">
-            <InputFile OnChange="@(e => OnInputFileChange(e))" />
-                <Image Src="@usuario.ImagenSrc"></Image>
-            <ValidationMessage For="@(() => usuario.Foto)" class="text-red-500 text-[10px] font-bold uppercase" />
-         
+    
+    <!-- Contenedor principal con Grid de Bootstrap -->
+    <div class="row row-cols-1 row-cols-lg-2 g-3">
+        
+        <!-- Foto (Ocupa las 2 columnas en desktop para que resalte, o 1 si prefieres) -->
+        <div class="col-lg-12">
+            <label class="form-label fw-bold  text-blue-400 uppercase tracking-widest ml-1">@GetDisplayName(nameof(usuario.Foto)): <span class="text-danger">*</span></label>
+            <div class="d-flex align-items-center gap-3">
+                <InputFile OnChange="@(e => OnInputFileChange(e))" class="form-control" />
+                <Image Src="@usuario.ImagenSrc" Style="max-width: 100px;"></Image>
+            </div>
+            <ValidationMessage For="@(() => usuario.Foto)" class="text-danger small" />
         </div>
-    </div>
-    <div class="form-group row mb-3">
-        <label class="col-12 col-md-4 col-form-label">@GetDisplayName(nameof(usuario.Name)): <span class="text-danger">*</span></label>
+
+        <!-- Nombre -->
         <div class="col">
-            <TextInput @bind-Value="@usuario.Name" Placeholder="@("Ingrese su " + GetDisplayName(nameof(usuario.Name)))" class="form-control" />
-            <ValidationMessage For="@(() => usuario.Name)" class="text-red-400 text-xs mt-1" />
+            <label class="form-label text-blue-400 uppercase tracking-widest ml-1">@GetDisplayName(nameof(usuario.Name))</label>
+            <TextInput @bind-Value="@usuario.Name" Placeholder="Ingrese su nombre" class="form-control" />
+            <ValidationMessage For="@(() => usuario.Name)" class="text-danger small" />
         </div>
-    </div>
-    <div class="form-group row mb-3">
-        <label class="col-12 col-md-4  col-form-label">@GetDisplayName(nameof(usuario.Email)): <span class="text-danger">*</span></label>
+
+        <!-- Email -->
         <div class="col">
-            <TextInput @bind-Value="@usuario.Email" Placeholder="@("Ingrese su " + GetDisplayName(nameof(usuario.Email)))" class="form-control" />
-            <ValidationMessage For="@(() => usuario.Email)" class="text-red-400 text-xs mt-1" />
+            <label class="form-label text-blue-400 uppercase tracking-widest ml-1">@GetDisplayName(nameof(usuario.Email))</label>
+            <TextInput @bind-Value="@usuario.Email" Placeholder="correo@ejemplo.com" class="form-control" />
+            <ValidationMessage For="@(() => usuario.Email)" class="text-danger small" />
         </div>
-    </div>  
-    <div class="form-group row mb-3">
-        <label class="col-12 col-md-4 col-form-label">@GetDisplayName(nameof(usuario.Password)): <span class="text-danger">*</span></label>
+
+        <!-- Password -->
         <div class="col">
-            <PasswordInput @bind-Value="@usuario.Password" Placeholder="@("Ingrese su " + GetDisplayName(nameof(usuario.Password)))" class="form-control" />
-            <ValidationMessage For="@(() => usuario.Password)" class="text-red-400 text-xs mt-1" />
+            <label class="form-label text-blue-400 uppercase tracking-widest ml-1">@GetDisplayName(nameof(usuario.Password))</label>
+            <PasswordInput @bind-Value="@usuario.Password" class="form-control" />
+            <ValidationMessage For="@(() => usuario.Password)" class="text-danger small" />
         </div>
-    </div>  
-    <div class="form-group row mb-3">
-        <label class="col-12 col-md-4 col-form-label">@GetDisplayName(nameof(usuario.RPassword)): <span class="text-danger">*</span></label>
+
+        <!-- Confirm Password -->
         <div class="col">
-            <PasswordInput @bind-Value="@usuario.RPassword" Placeholder="Repita su Contraseña" class="form-control" />
-            <ValidationMessage For="@(() => usuario.RPassword)" class="text-red-400 text-xs mt-1" />
+            <label class="form-label text-blue-400 uppercase tracking-widest ml-1">@GetDisplayName(nameof(usuario.RPassword))</label>
+            <PasswordInput @bind-Value="@usuario.RPassword" class="form-control" />
+            <ValidationMessage For="@(() => usuario.RPassword)" class="text-danger small" />
         </div>
-    </div>  
-    <div class="form-group row mb-3">
-        <label class="col-12 col-md-4 col-form-label">@GetDisplayName(nameof(usuario.Proyecto)): <span class="text-danger">*</span></label>
+
+        <!-- Proyecto -->
         <div class="col">
+            <label class="form-label text-blue-400 uppercase tracking-widest ml-1">@GetDisplayName(nameof(usuario.Proyecto))</label>
             <InputSelect @bind-Value="@usuario.Proyecto" class="form-select">
                 @foreach (var item in Enum.GetValues<TiposProyectos>())
                 {
                     <option value="@item">@item.GetDisplayName()</option>
                 }
             </InputSelect>
-            <ValidationMessage For="@(() => usuario.Proyecto)" class="text-red-400 text-xs mt-1" />
         </div>
-    </div>
-    <div class="form-group row mb-3">
-        <label class="col-12 col-md-4 col-form-label">@GetDisplayName(nameof(usuario.Telefono)): <span class="text-danger">*</span></label>
-        <div class="col">
-            <TextInput @bind-Value="@usuario.Telefono" Placeholder="Numero de 10 digitos" class="form-control" />
-            <ValidationMessage For="@(() => usuario.Telefono)" class="text-red-400 text-xs mt-1" />
 
-        </div>
-    </div>
-    <div class="form-group row mb-3">
-        <label class="col-12 col-md-4  col-form-label">@GetDisplayName(nameof(usuario.Instituto)): <span class="text-danger">*</span></label>
+        <!-- Teléfono -->
         <div class="col">
-            <TextInput @bind-Value="@usuario.Instituto" Placeholder="@("Ingrese su " + GetDisplayName(nameof(usuario.Instituto)))" class="form-control" />
-            <ValidationMessage For="@(() => usuario.Instituto)" class="text-red-400 text-xs mt-1" />
+            <label class="form-label text-blue-400 uppercase tracking-widest ml-1">@GetDisplayName(nameof(usuario.Telefono))</label>
+            <TextInput @bind-Value="@usuario.Telefono" Placeholder="10 dígitos" class="form-control" />
         </div>
-    </div>
-    <div class="form-group row mb-3">
-        <label class="col-12 col-md-4  col-form-label">@GetDisplayName(nameof(usuario.Instituto)): <span class="text-danger">*</span></label>
-        <div class="col">
 
-            <AutoComplete @bind-Value="@usuario.Instituto"
-                          TItem="string"
-                          DataProvider="InstitutosDataProvider"
-                          PropertyName=""
-                          Placeholder="Search a customer..." />
-            <ValidationMessage For="@(() => usuario.Instituto)" class="text-red-400 text-xs mt-1" />
-        </div>
-    </div>
-    
-    <div class="form-group row mb-3">
-        <label class="col-12 col-md-4 col-form-label">@GetDisplayName(nameof(usuario.Carrera)): <span class="text-danger">*</span></label>
+        <!-- Instituto -->
         <div class="col">
+            <label class="form-label text-blue-400 uppercase tracking-widest ml-1">@GetDisplayName(nameof(usuario.Instituto))</label>
+            <AutoComplete @bind-Value="@usuario.Instituto" TItem="string" DataProvider="InstitutosDataProvider" />
+        </div>
+
+        <!-- Carrera -->
+        <div class="col">
+            <label class="form-label text-blue-400 uppercase tracking-widest ml-1">@GetDisplayName(nameof(usuario.Carrera))</label>
             <InputSelect @bind-Value="@usuario.Carrera" class="form-select">
                 @foreach (var item in Enum.GetValues<Tipos_Carreras>())
                 {
                     <option value="@((int)item)">@item.GetDisplayName()</option>
                 }
             </InputSelect>
-            <ValidationMessage For="@(() => usuario.Carrera)" class="text-red-400 text-xs mt-1" />
         </div>
-    </div>
-    <div class="form-group row mb-3">
-        <label class="col-12 col-md-4 col-form-label">@GetDisplayName(nameof(usuario.Semestre)): <span class="text-danger">*</span></label>
+
+        <!-- Semestre -->
         <div class="col">
+            <label class="form-label text-blue-400 uppercase tracking-widest ml-1">@GetDisplayName(nameof(usuario.Semestre))</label>
             <InputSelect @bind-Value="@usuario.Semestre" class="form-select">
                 @foreach (var item in Enum.GetValues<Numero_Semestre>())
                 {
                     <option value="@item">@item.GetDisplayName()</option>
                 }
             </InputSelect>
-            <ValidationMessage For="@(() => usuario.Semestre)" class="text-red-400 text-xs mt-1" />
         </div>
-    </div>
-    
-    <div class="form-group row mb-3">
-        <label class="col-12 col-md-4 col-form-label">@GetDisplayName(nameof(usuario.GenPolaris)): <span class="text-danger">*</span></label>
+
+        <!-- Generación -->
         <div class="col">
-            <InputSelect @bind-Value="@usuario.GenPolaris" class="form-select" >
+            <label class="form-label text-blue-400 uppercase tracking-widest ml-1">@GetDisplayName(nameof(usuario.GenPolaris))</label>
+            <InputSelect @bind-Value="@usuario.GenPolaris" class="form-select">
                 @foreach (var item in Enum.GetValues<GeneracionesPol>())
                 {
                     <option value="@item">@item.GetDisplayName()</option>
                 }
             </InputSelect>
-            <ValidationMessage For="@(() => usuario.GenPolaris)" class="text-red-400 text-xs mt-1" />
         </div>
-    </div>
-    
-    <div class="form-group row mb-3">
-        <label class="col-12 col-md-4 col-form-label">@GetDisplayName(nameof(usuario.Habilidades)): <span class="text-danger">*</span></label>
-        <div class="col">
+
+        <!-- Habilidades (Ocupa 2 columnas en desktop por ser múltiple) -->
+        <div class="col-lg-12">
+            <label class="form-label text-blue-400 uppercase tracking-widest ml-1">@GetDisplayName(nameof(usuario.Habilidades))</label>
             <InputSelect @bind-Value="@usuario.Habilidades" class="form-select" multiple>
                 @foreach (var item in Enum.GetValues<TiposHabilidades>())
                 {
                     <option value="@item">@item.GetDisplayName()</option>
                 }
             </InputSelect>
-            <ValidationMessage For="@(() => usuario.Habilidades)" class="text-red-400 text-xs mt-1" />
         </div>
-    </div>
-    <div class="form-group row mb-3">
-        <label class="col-12 col-md-4  col-form-label">@GetDisplayName(nameof(usuario.Lugar_actual)): <span class="text-danger">*</span></label>
-        <div class="col">
 
-            <AutoComplete @bind-Value="@usuario.Lugar_actual"
-                          TItem="string"
-                          DataProvider="InstitutosDataProvider"
-                          PropertyName=""
-                          Placeholder="Search a customer..." />
-            <ValidationMessage For="@(() => usuario.Lugar_actual)" class="text-red-400 text-xs mt-1" />
+        <!-- Interés (Checkbox) -->
+        <div class="col-lg-12 d-flex align-items-center gap-2">
+            <CheckboxInput @bind-Value="@usuario.Interes_Polaris" />
+            <label class="form-check-label text-blue-400 uppercase tracking-widest ml-1">@GetDisplayName(nameof(usuario.Interes_Polaris))</label>
+        </div>
 
-        </div>
-    </div>
-    <div class="form-group row mb-3">
-        <label class="col-12 col-md-4  col-form-label">@GetDisplayName(nameof(usuario.Rol_actual)): <span class="text-danger">*</span></label>
-        <div class="col">
-
-            <AutoComplete @bind-Value="@usuario.Rol_actual"
-                          TItem="string"
-                          DataProvider="InstitutosDataProvider"
-                          PropertyName=""
-                          Placeholder="Search a customer..." />
-            <ValidationMessage For="@(() => usuario.Rol_actual)" class="text-red-400 text-xs mt-1" />
-        </div>
-    </div>
-   
-    <div class="form-group row mb-3">
-        <label class="col-12 col-md-4  col-form-label">@GetDisplayName(nameof(usuario.Interes_Polaris)): <span class="text-danger">*</span></label>
-        <div class="col">
-            <CheckboxInput @bind-Value="@usuario.Interes_Polaris" class="form-control" />
-            <ValidationMessage For="@(() => usuario.Interes_Polaris)" class="text-red-400 text-xs mt-1" />
-        </div>
     </div>
 
-    
-    <div class="mb-3">
+    <!-- Botones -->
+    <div class="mt-4">
         <Button Color="ButtonColor.Success" @onclick="HandleOnValidSubmit"> Registrarme </Button>
         <Button Color="ButtonColor.Secondary" @onclick="ResetForm"> Limpiar </Button>
     </div>
